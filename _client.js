@@ -31,15 +31,56 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
-console.log(`  _____ ____  __  __ _                
+// rlState
+// 0 = Menu Selection
+// 1 = View Channels
+// 2 = Account Information
+let rlState = 0;
+
+console.log("\033[2J" + chalk.yellow("\nConnecting..."));
+
+function showMenu() {
+    console.log("―".repeat(process.stdout.columns < 50 ? process.stdout.columns : 50));
+    console.log("1)\tView Channel");
+    console.log("2)\tAccount Information");
+    console.log("3)\tExit");
+}
+
+function showAccount() {
+    console.log("―".repeat(process.stdout.columns < 50 ? process.stdout.columns : 50));
+    console.log(`ID\t\t${client.user.id}`);
+    console.log(`Username\t${client.user.name}`);
+    console.log(`E-Mail:\t\t${client.user.email}`);
+}
+
+client.on("ready", () => {
+    console.log(chalk.green(`Connected! (${client.channels.size} Channels, ${((client.readyAt - client.instanceAt) / 1000).toFixed(2)}s)`));
+    console.log(`  _____ ____  __  __ _                
  |_   _/ __ \\|  \\/  (_)               
    | || |  | | \\  / |_ _ __ ___  __ _ 
    | || |  | | |\\/| | | '__/ _ \\/ _\` |
   _| || |__| | |  | | | | |  __/ (_| |
- |_____\\____/|_|  |_|_|_|  \\___|\\__,_|\n`, chalk.yellow("\nConnecting..."));
+ |_____\\____/|_|  |_|_|_|  \\___|\\__,_|\n`);
+    showMenu();
+});
 
-
-client.on("ready", () => {
-    console.log(chalk.green(`Connected! (${client.channels.size} Channels, ${((client.readyAt - client.instanceAt) / 1000).toFixed(2)}s)`));
-    console.log("―".repeat(process.stdout.columns < 50 ? process.stdout.columns : 50));
+process.stdin.on("keypress", str => {
+    if (rlState === 0) {
+        console.log("\033[2J");
+        console.log(`  _____ ____  __  __ _                
+ |_   _/ __ \\|  \\/  (_)               
+   | || |  | | \\  / |_ _ __ ___  __ _ 
+   | || |  | | |\\/| | | '__/ _ \\/ _\` |
+  _| || |__| | |  | | | | |  __/ (_| |
+ |_____\\____/|_|  |_|_|_|  \\___|\\__,_|\n`);
+        if (str === "1") {
+            rlState = 1;
+        }
+        else if (str === "2") {
+            showAccount();
+            rlState = 2;
+        }
+        else if (str === "3") process.exit(0);
+        else showMenu();
+    }
 });
