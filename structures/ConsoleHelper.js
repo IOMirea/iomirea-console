@@ -1,6 +1,6 @@
 class ConsoleHelper {
     static clear(std) {
-        (std || console.log)('\033[2J');
+        (std || console.log)("\033[2J");
     }
 }
 
