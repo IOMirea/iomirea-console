@@ -55,7 +55,6 @@ function showAccount() {
 }
 
 function showChannels() {
-
 }
 
 client.on("ready", () => {
@@ -79,6 +78,7 @@ process.stdin.on("keypress", str => {
   _| || |__| | |  | | | | |  __/ (_| |
  |_____\\____/|_|  |_|_|_|  \\___|\\__,_|\n`);
         if (str === "1") {
+            showChannels();
             rlState = 1;
         }
         else if (str === "2") {
