@@ -8,6 +8,8 @@ module.exports = class Client extends EventEmitter {
         this._channels = new Map();
         this._users = new Map();
         this._accessToken;
+        this._instanceAt = Date.now();
+        this._readyAt = null;
     }
 
     get channels() {
@@ -34,6 +36,18 @@ module.exports = class Client extends EventEmitter {
         return this._accessToken = value;
     }
 
+    get instanceAt() {
+        return this._instanceAt;
+    }
+
+    get uptime() {
+        return Date.now() - this.readyAt;
+    }
+
+    get readyAt() {
+        return this._readyAt;
+    }
+
     login(token) {
         return new Promise((resolve, reject) => {
             fetch(this.constructor.API_HOST + "users/@me/channels", {
@@ -43,6 +57,7 @@ module.exports = class Client extends EventEmitter {
             }).then(async r => {
                 if (r.status === 200) {
                     this.accessToken = token;
+                    this._readyAt = Date.now();
                     const channels = await r.json();
                     for(let i=0; i < channels.length; ++i) {
                         const tempChannel = new Channel(channels[i].id, channels[i].name, channels[i].owner_id, channels[i].user_ids, channels[i].pinned_ids);
