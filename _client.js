@@ -54,6 +54,10 @@ function showAccount() {
     console.log("(Press any key to go back)");
 }
 
+function showChannels() {
+
+}
+
 client.on("ready", () => {
     console.log(chalk.green(`Connected! (${client.channels.size} Channels, ${((client.readyAt - client.instanceAt) / 1000).toFixed(2)}s)`));
     console.log(`  _____ ____  __  __ _                
