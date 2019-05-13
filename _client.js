@@ -51,6 +51,7 @@ function showAccount() {
     console.log(`ID\t\t${client.user.id}`);
     console.log(`Username\t${client.user.name}`);
     console.log(`E-Mail:\t\t${client.user.email}`);
+    console.log("(Press any key to go back)");
 }
 
 client.on("ready", () => {
@@ -82,5 +83,17 @@ process.stdin.on("keypress", str => {
         }
         else if (str === "3") process.exit(0);
         else showMenu();
+    } else if (rlState === 1) {
+
+    } else if (rlState === 2) {
+        console.log("\033[2J");
+        console.log(`  _____ ____  __  __ _                
+ |_   _/ __ \\|  \\/  (_)               
+   | || |  | | \\  / |_ _ __ ___  __ _ 
+   | || |  | | |\\/| | | '__/ _ \\/ _\` |
+  _| || |__| | |  | | | | |  __/ (_| |
+ |_____\\____/|_|  |_|_|_|  \\___|\\__,_|\n`);
+        showMenu();
+        rlState = 0;
     }
 });
