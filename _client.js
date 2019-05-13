@@ -1,10 +1,14 @@
 const fetch    = require("node-fetch");
 const readline = require("readline");
 const fs       = require("fs");
+const Client   = require("./structures/iomireaClient");
+const chalk    = require("chalk");
+const Channel  = require("./structures/Channel");
+const User     = require("./structures/User");
 let config = {};
-const Client = require("./structures/iomireaClient");
+
 const client = new Client();
-const chalk = require("chalk");
+
 (() => {
     fs.readFile("./.config", "utf8", (err, data) => {
         for (const {key, value} of data.split("\n").map(v => {
@@ -15,6 +19,10 @@ const chalk = require("chalk");
         })) {
             config[key] = value;
         }
+
+        client.login(config.ACCESS_TOKEN).catch(e => {
+            console.log(chalk.red("Error while logging in: " + e));
+        });
     });
 })();
 
@@ -23,16 +31,15 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
-async function showMenu() {
-    console.log(`  _____ ____  __  __ _                
+console.log(`  _____ ____  __  __ _                
  |_   _/ __ \\|  \\/  (_)               
    | || |  | | \\  / |_ _ __ ___  __ _ 
    | || |  | | |\\/| | | '__/ _ \\/ _\` |
   _| || |__| | |  | | | | |  __/ (_| |
- |_____\\____/|_|  |_|_|_|  \\___|\\__,_|
-                                      
-                                      `);
-    console.log(chalk.yellow("Connecting..."));
-}
+ |_____\\____/|_|  |_|_|_|  \\___|\\__,_|\n`, chalk.yellow("\nConnecting..."));
 
-showMenu();
+
+client.on("ready", () => {
+    console.log(chalk.green(`Connected! (${client.channels.size} Channels, ${((client.readyAt - client.instanceAt) / 1000).toFixed(2)}s)`));
+    console.log("―".repeat(process.stdout.columns < 50 ? process.stdout.columns : 50));
+});
