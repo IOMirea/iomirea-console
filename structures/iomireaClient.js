@@ -10,6 +10,7 @@ module.exports = class Client extends EventEmitter {
         this._accessToken;
         this._instanceAt = Date.now();
         this._readyAt = null;
+        this._user = null;
     }
 
     get channels() {
@@ -48,6 +49,18 @@ module.exports = class Client extends EventEmitter {
         return this._readyAt;
     }
 
+    get user() {
+        return this._user;
+    }
+
+    set user(value) {
+        return this._user = value;
+    }
+
+    static get API_HOST() {
+        return "https://iomirea.ml/api/v0/";
+    }
+
     login(token) {
         return new Promise((resolve, reject) => {
             fetch(this.constructor.API_HOST + "users/@me/channels", {
@@ -63,6 +76,10 @@ module.exports = class Client extends EventEmitter {
                         const tempChannel = new Channel(channels[i].id, channels[i].name, channels[i].owner_id, channels[i].user_ids, channels[i].pinned_ids);
                         this.channels.set(channels.id, tempChannel);
                     }
+                    await this.fetchUser("@me").then(u => {
+                            this.user = u;
+                            this.users.set(u.id, u);
+                    });
                     this.emit("ready");
                     resolve(this);
                 } else if (r.status === 401) {
@@ -70,10 +87,6 @@ module.exports = class Client extends EventEmitter {
                 }
             });
         });
-    }
-
-    static get API_HOST() {
-        return "https://iomirea.ml/api/v0/";
     }
 
     request(endpoint, json = false) {
@@ -87,6 +100,14 @@ module.exports = class Client extends EventEmitter {
                 else return r.text();
             }).then(resolve)
                 .catch(reject);
+        });
+    }
+
+    fetchUser(user) {
+        return new Promise((resolve, reject) => {
+            this.request(`users/${user}`, true).then(v => {
+                resolve(v);
+            }).catch(reject);
         });
     }
 };
