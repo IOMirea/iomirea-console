@@ -31,7 +31,15 @@ module.exports = class Channel {
         return this._owner_id = value;
     }
 
-    get pinnged_ids() {
+    get user_ids() {
+        return this._user_ids;
+    }
+
+    set user_ids(value) {
+        return this._user_ids = value;
+    }
+
+    get pinned_ids() {
         return this._pinned_ids;
     }
 
