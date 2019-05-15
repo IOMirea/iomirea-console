@@ -11,6 +11,10 @@ const client = new Client();
 
 (() => {
     fs.readFile("./.config", "utf8", (err, data) => {
+        if (err) {
+            console.log(chalk.red("An error occured while trying to open .config"));
+            process.exit(1);
+        }
         for (const {key, value} of data.split("\n").map(v => {
             return {
                 key: v.split("=")[0],
