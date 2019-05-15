@@ -1,10 +1,12 @@
 module.exports = class Channel {
-    constructor(id, name, owner_id, user_ids, pinned_ids) {
+    constructor(id, name, owner_id, user_ids, pinned_ids, client) {
         this._id = id;
         this._name = name;
         this._owner_id = owner_id;
         this._user_ids = user_ids;
         this._pinned_ids = pinned_ids;
+        this._client = client;
+        this._messages = [];
     }
 
     get id() {
@@ -45,5 +47,30 @@ module.exports = class Channel {
 
     set pinned_ids(value) {
         return this._pinned_ids = value;
+    }
+
+    get client() {
+        return this._client;
+    }
+
+    set client(value) {
+        return this._client = value;
+    }
+
+    get messages() {
+        return this._messages;
+    }
+
+    set messages(value) {
+        return this._messages = value;
+    }
+
+    fetchMessages(cache) {
+        return new Promise((resolve, reject) => {
+            this.client.request(`channels/${this.id}/messages`, true).then(v => {
+                if (cache === true) this.messages = v;
+                resolve(v);
+            }).catch(reject);
+        });
     }
 };
