@@ -73,7 +73,7 @@ module.exports = class Client extends EventEmitter {
                     this._readyAt = Date.now();
                     const channels = await r.json();
                     for(let i=0; i < channels.length; ++i) {
-                        const tempChannel = new Channel(channels[i].id, channels[i].name, channels[i].owner_id, channels[i].user_ids, channels[i].pinned_ids);
+                        const tempChannel = new Channel(channels[i].id, channels[i].name, channels[i].owner_id, channels[i].user_ids, channels[i].pinned_ids, this);
                         this.channels.set(tempChannel.id, tempChannel);
                     }
                     await this.fetchUser("@me").then(u => {
@@ -109,5 +109,9 @@ module.exports = class Client extends EventEmitter {
                 resolve(v);
             }).catch(reject);
         });
+    }
+
+    static getTime(snowflake) {
+        return parseInt(1546300800n+(BigInt(snowflake) >> 22n)/1000n)*1000;
     }
 };
