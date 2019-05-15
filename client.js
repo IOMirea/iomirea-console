@@ -35,6 +35,7 @@ const rl = readline.createInterface({
 // 0 = Menu Selection
 // 1 = View Channels
 // 2 = Account Information
+// 3 = Channel Browser
 let rlState = 0;
 
 console.log("\033[2J" + chalk.yellow("\nConnecting..."));
@@ -62,6 +63,16 @@ function showChannels() {
         console.log(`${i+1}\t${channels[i].name.substr(0, 24) + (channels[i].name.length > 24 ? "..." : ' '.repeat(24 - channels[i].name.length))}\t${channels[i].user_ids.length} Users`);
     }
     console.log("\n\nPress CTRL + C anytime to get back to the menu");
+}
+
+async function showChannel(channel) {
+    if (channel.constructor.name === "Number") channel = client.channels.get(channel);
+    const messages = await channel.fetchMessages(false);
+    console.log("Time\t\tMessage");
+    for(let i=0;i<messages.length;++i) {
+        console.log(`${new Date(Client.getTime(messages[i].id)).toLocaleString()}\t${messages[i].content}`);
+    }
+
 }
 
 client.on("ready", () => {
@@ -95,7 +106,10 @@ process.stdin.on("keypress", str => {
         else if (str === "3") process.exit(0);
         else showMenu();
     } else if (rlState === 1) {
-        const answer = parseInt();
+        const answer = parseInt(str);
+        if (isNaN(answer)) return console.log(chalk.red("\t\t"+str));
+        else showChannel(Array.from(client.channels.values())[answer - 1]);
+
     } else if (rlState === 2) {
         console.log("\033[2J");
         console.log(`  _____ ____  __  __ _                
