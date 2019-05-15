@@ -74,7 +74,7 @@ module.exports = class Client extends EventEmitter {
                     const channels = await r.json();
                     for(let i=0; i < channels.length; ++i) {
                         const tempChannel = new Channel(channels[i].id, channels[i].name, channels[i].owner_id, channels[i].user_ids, channels[i].pinned_ids);
-                        this.channels.set(channels.id, tempChannel);
+                        this.channels.set(tempChannel.id, tempChannel);
                     }
                     await this.fetchUser("@me").then(u => {
                             this.user = u;
