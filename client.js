@@ -44,6 +44,11 @@ let rlState = 0;
 
 console.log("\033[2J" + chalk.yellow("\nConnecting..."));
 
+function formatDate(date) {
+    if (!(date instanceof Date)) date = new Date(date);
+    return (date.getMonth() + 1) + "-" + date.getDate() + "-" + date.getFullYear() + " " + (date.getHours() < 10 ? ('0' + date.getHours()) : date.getHours()) + ":" + (date.getMinutes() < 10 ? ('0' + date.getMinutes()) : date.getMinutes());
+}
+
 function showMenu() {
     console.log("―".repeat(process.stdout.columns < 50 ? process.stdout.columns : 50));
     console.log("1)\tView Channel");
@@ -72,11 +77,13 @@ function showChannels() {
 async function showChannel(channel) {
     if (channel.constructor.name === "Number") channel = client.channels.get(channel);
     const messages = await channel.fetchMessages(false);
-    console.log("Time\t\tMessage");
+    //console.log("Time\t\t|\tMessage");
+    //console.log("―".repeat(process.stdout.columns));
     for(let i=0;i<messages.length;++i) {
-        console.log(`${new Date(Client.getTime(messages[i].id)).toLocaleString()}\t${messages[i].content}`);
+        const time = formatDate(Client.getTime(messages[i].id));
+        console.log("[" + time + "]" + (" ".repeat(20 - time.length)) + messages[i].author.name + ">" + (" ".repeat(10 - messages[i].author.name.length))+ messages[i].content.substr(1, process.stdout.columns || 2048));
     }
-
+    console.log(("\n").repeat(process.stdout.rows - messages.length - 2) + "[X] Send Message\t[C] Back to Channel Browser\t[]");
 }
 
 client.on("ready", () => {
@@ -92,7 +99,7 @@ client.on("ready", () => {
 
 process.stdin.on("keypress", str => {
     if (rlState === 0) {
-        console.log("\033[2J");
+        console.clear();
         console.log(`  _____ ____  __  __ _                
  |_   _/ __ \\|  \\/  (_)               
    | || |  | | \\  / |_ _ __ ___  __ _ 
@@ -111,11 +118,12 @@ process.stdin.on("keypress", str => {
         else showMenu();
     } else if (rlState === 1) {
         const answer = parseInt(str);
+        console.clear();
         if (isNaN(answer)) return console.log(chalk.red("\t\t"+str));
         else showChannel(Array.from(client.channels.values())[answer - 1]);
 
     } else if (rlState === 2) {
-        console.log("\033[2J");
+        console.clear();
         console.log(`  _____ ____  __  __ _                
  |_   _/ __ \\|  \\/  (_)               
    | || |  | | \\  / |_ _ __ ___  __ _ 
@@ -128,7 +136,7 @@ process.stdin.on("keypress", str => {
 });
 
 rl.on("SIGINT", () => {
-    console.log("\033[2J");
+    console.clear();
     console.log(`  _____ ____  __  __ _                
  |_   _/ __ \\|  \\/  (_)               
    | || |  | | \\  / |_ _ __ ___  __ _ 
