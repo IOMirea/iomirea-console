@@ -77,11 +77,18 @@ function showChannels() {
 async function showChannel(channel) {
     if (channel.constructor.name === "Number") channel = client.channels.get(channel);
     const messages = await channel.fetchMessages(false);
+    for(let i=0;i<30;++i) {
+        messages.push({
+            author: { name: 'a' },
+            content: Math.random().toString(36).substr(2),
+            id: Math.floor(Math.random() * 1000000) + 1000000
+        });
+    }
     for(let i=0;i<messages.length;++i) {
         const time = formatDate(Client.getTime(messages[i].id));
         console.log("[" + time + "]" + (" ".repeat(20 - time.length)) + messages[i].author.name + ">" + (" ".repeat(10 - messages[i].author.name.length))+ messages[i].content.substr(1, process.stdout.columns || 2048));
     }
-    console.log(("\n").repeat(process.stdout.rows - messages.length - 2) + "[X] Send Message\t[C] Back to Channel Browser\t[]");
+    console.log(("\n").repeat(messages.length > process.stdout.rows ? 0 : process.stdout.rows - messages.length - 2) + "[X] Send Message\t[C] Back to Channel Browser\t[R] Force Reload");
 }
 
 client.on("ready", () => {
