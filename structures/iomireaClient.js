@@ -11,6 +11,7 @@ module.exports = class Client extends EventEmitter {
         this._instanceAt = Date.now();
         this._readyAt = null;
         this._user = null;
+        this._activeChannel = null;
     }
 
     get channels() {
@@ -55,6 +56,14 @@ module.exports = class Client extends EventEmitter {
 
     set user(value) {
         return this._user = value;
+    }
+
+    get activeChannel() {
+        return this._activeChannel;
+    }
+
+    set activeChannel(value) {
+        return this._activeChannel = value;
     }
 
     static get API_HOST() {
