@@ -77,8 +77,6 @@ function showChannels() {
 async function showChannel(channel) {
     if (channel.constructor.name === "Number") channel = client.channels.get(channel);
     const messages = await channel.fetchMessages(false);
-    //console.log("Time\t\t|\tMessage");
-    //console.log("―".repeat(process.stdout.columns));
     for(let i=0;i<messages.length;++i) {
         const time = formatDate(Client.getTime(messages[i].id));
         console.log("[" + time + "]" + (" ".repeat(20 - time.length)) + messages[i].author.name + ">" + (" ".repeat(10 - messages[i].author.name.length))+ messages[i].content.substr(1, process.stdout.columns || 2048));
