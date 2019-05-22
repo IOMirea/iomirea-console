@@ -74,16 +74,9 @@ function showChannels() {
     console.log("\n\nPress CTRL + C anytime to get back to the menu");
 }
 
-async function showChannel(channel) {
+async function showChannel(channel, state = 0) {
     if (channel.constructor.name === "Number") channel = client.channels.get(channel);
-    const messages = await channel.fetchMessages(true);
-    for(let i=0;i<30;++i) {
-        messages.push({
-            author: { name: 'a' },
-            content: Math.random().toString(36).substr(2),
-            id: Math.floor(Math.random() * 1000000) + 1000000
-        });
-    }
+    const messages = state === 0 ? await channel.fetchMessages(true) : channel.messages;
     for(let i=0;i<messages.length;++i) {
         const time = formatDate(Client.getTime(messages[i].id));
         console.log("[" + time + "]" + (" ".repeat(20 - time.length)) + messages[i].author.name + ">" + (" ".repeat(10 - messages[i].author.name.length))+ messages[i].content.substr(1, process.stdout.columns || 2048));
@@ -142,7 +135,19 @@ process.stdin.on("keypress", str => {
         rlState = 0;
     } else if (rlState === 3) {
         if (str === "x") {
-            console.log("ok")
+            //TODO: show channel with cached messages and send message section
+        } else if (str === "c") {
+            console.clear();
+            console.log(`  _____ ____  __  __ _                
+ |_   _/ __ \\|  \\/  (_)               
+   | || |  | | \\  / |_ _ __ ___  __ _ 
+   | || |  | | |\\/| | | '__/ _ \\/ _\` |
+  _| || |__| | |  | | | | |  __/ (_| |
+ |_____\\____/|_|  |_|_|_|  \\___|\\__,_|\n`);
+            rlState = 1;
+            showChannels();
+        } else if (str === "r") {
+
         }
     }
 });
