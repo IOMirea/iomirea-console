@@ -76,7 +76,7 @@ function showChannels() {
 
 async function showChannel(channel) {
     if (channel.constructor.name === "Number") channel = client.channels.get(channel);
-    const messages = await channel.fetchMessages(false);
+    const messages = await channel.fetchMessages(true);
     for(let i=0;i<30;++i) {
         messages.push({
             author: { name: 'a' },
@@ -124,8 +124,11 @@ process.stdin.on("keypress", str => {
     } else if (rlState === 1) {
         const answer = parseInt(str);
         console.clear();
-        if (isNaN(answer)) return console.log(chalk.red("\t\t"+str));
-        else showChannel(Array.from(client.channels.values())[answer - 1]);
+        if (isNaN(answer)) return;
+        else {
+            showChannel(Array.from(client.channels.values())[answer - 1]);
+            rlState = 3;
+        }
 
     } else if (rlState === 2) {
         console.clear();
@@ -137,6 +140,10 @@ process.stdin.on("keypress", str => {
  |_____\\____/|_|  |_|_|_|  \\___|\\__,_|\n`);
         showMenu();
         rlState = 0;
+    } else if (rlState === 3) {
+        if (str === "x") {
+            console.log("ok")
+        }
     }
 });
 
