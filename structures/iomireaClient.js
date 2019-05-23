@@ -120,6 +120,11 @@ module.exports = class Client extends EventEmitter {
         });
     }
 
+    removeActiveChannel() {
+        if (this.activeChannel instanceof Channel) clearInterval(this.activeChannel.messageHandler);
+        this.activeChannel = null;
+    }
+
     static getTime(snowflake) {
         return parseInt(1546300800n+(BigInt(snowflake) >> 22n)/1000n)*1000;
     }
