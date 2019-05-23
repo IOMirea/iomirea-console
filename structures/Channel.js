@@ -7,6 +7,7 @@ module.exports = class Channel {
         this._pinned_ids = pinned_ids;
         this._client = client;
         this._messages = [];
+        this._messageHandler = null;
     }
 
     get id() {
@@ -65,6 +66,14 @@ module.exports = class Channel {
         return this._messages = value;
     }
 
+    get messageHandler() {
+        return this._messageHandler;
+    }
+
+    set messageHandler(val) {
+        return this._messageHandler = val;
+    }
+
     fetchMessages(c) {
         return new Promise((resolve, reject) => {
             this.client.request(`channels/${this.id}/messages`, true).then(v => {
@@ -72,5 +81,13 @@ module.exports = class Channel {
                 resolve(v);
             }).catch(reject);
         });
+    }
+
+    handleMessages(c, m) {
+        this.messageHandler = setInterval(() => {
+            this.fetchMessages(true).then(v => {
+                if (typeof c === "function") c(v);
+            });
+        }, m);
     }
 };
