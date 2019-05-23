@@ -40,6 +40,7 @@ const rl = readline.createInterface({
 // 1 = View Channels
 // 2 = Account Information
 // 3 = Channel Browser
+// 4 = Channel Browser (Send Message)
 let rlState = 0;
 
 console.log("\033[2J" + chalk.yellow("\nConnecting..."));
@@ -81,7 +82,8 @@ async function showChannel(channel, state = 0) {
         const time = formatDate(Client.getTime(messages[i].id));
         console.log("[" + time + "]" + (" ".repeat(20 - time.length)) + messages[i].author.name + ">" + (" ".repeat(10 - messages[i].author.name.length))+ messages[i].content.substr(1, process.stdout.columns || 2048));
     }
-    console.log(("\n").repeat(messages.length > process.stdout.rows ? 0 : process.stdout.rows - messages.length - 2) + "[X] Send Message\t[C] Back to Channel Browser\t[R] Force Reload");
+    const spacePad = state === 2 ? 3 : 2;
+    console.log(("\n").repeat(messages.length > process.stdout.rows ? 0 : process.stdout.rows - messages.length - spacePad) + (state === 2 ? "[CTRL+C] Back" : "[X] Send Message\t[C] Back to Channel Browser\t[R] Force Reload"));
 }
 
 client.on("ready", () => {
@@ -124,12 +126,15 @@ process.stdin.on("keypress", str => {
     } else if (rlState === 3) {
         if (str === "x") {
             //TODO: show channel with cached messages and send message section
+            console.clear();
+            showChannel(client.activeChannel, 2);
+            rlState = 4;
         } else if (str === "c") {
             ConsoleHelper.reset();
             rlState = 1;
             clearInterval(client.activeChannel.messageHandler);
             client.activeChannel = null;
-            showChannels(client.activeChannel, 1);
+            showChannels();
         } else if (str === "r") {
             client.activeChannel.fetchMessages(true).then(() => {
                 console.clear();
@@ -140,6 +145,12 @@ process.stdin.on("keypress", str => {
 });
 
 rl.on("SIGINT", () => {
+    if (rlState === 4) {
+        console.clear();
+        showChannel(client.activeChannel, 1);
+        rlState = 3;
+        return;
+    }
     client.removeActiveChannel();
     ConsoleHelper.reset();
     showMenu();
