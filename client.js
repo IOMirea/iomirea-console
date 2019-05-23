@@ -80,7 +80,7 @@ async function showChannel(channel, state = 0) {
     const messages = state === 0 ? await channel.fetchMessages(true) : channel.messages;
     for(let i=0;i<messages.length;++i) {
         const time = formatDate(Client.getTime(messages[i].id));
-        console.log("[" + time + "] " + (" ".repeat(15 - time.length)) + "│ " + messages[i].author.name + (" ".repeat(10 - messages[i].author.name.length))+ "│ " + messages[i].content.substr(0, process.stdout.columns || 2048));
+        console.log("[" + time + "] " + (" ".repeat(15 - time.length)) + "│ " + messages[i].author.name + (" ".repeat(10 - messages[i].author.name.length)) + "│ " + messages[i].content.substr(0, process.stdout.columns || 2048));
     }
     const spacePad = state === 2 ? 3 : 2;
     console.log(("\n").repeat(messages.length > process.stdout.rows ? 0 : process.stdout.rows - messages.length - spacePad) + (state === 2 ? "[CTRL+C] Back" : "[X] Send Message\t[C] Back to Channel Browser\t[R] Force Reload"));
@@ -123,7 +123,14 @@ process.stdin.on("keypress", (str, { name }) => {
             if (channel === undefined) return console.log(chalk.red("An error occured!"));
             showChannel(channel);
             client.activeChannel = channel;
-            channel.handleMessages(undefined, 1e3);
+            channel.handleMessages(n => {
+                if (channel.messages.length === n.length) return;
+                else {
+                    channel.messages = n;
+                    console.clear();
+                    showChannel(client.activeChannel, 1);
+                }
+            }, 1e3);
             rlState = 3;
         }
     } else if (rlState === 2) {
