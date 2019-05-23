@@ -119,7 +119,10 @@ process.stdin.on("keypress", str => {
         console.clear();
         if (isNaN(answer)) return;
         else {
-            showChannel(Array.from(client.channels.values())[answer - 1]);
+            const channel = Array.from(client.channels.values())[answer - 1];
+            if (channel === undefined) return console.log(chalk.red("An error occured!"));
+            showChannel(channel);
+            client.activeChannel = channel;
             rlState = 3;
         }
 
@@ -145,9 +148,12 @@ process.stdin.on("keypress", str => {
   _| || |__| | |  | | | | |  __/ (_| |
  |_____\\____/|_|  |_|_|_|  \\___|\\__,_|\n`);
             rlState = 1;
-            showChannels();
+            showChannels(client.activeChannel, 1);
         } else if (str === "r") {
-
+            client.activeChannel.fetchMessages(true).then(() => {
+                console.clear();
+                showChannel(client.activeChannel);
+            });
         }
     }
 });
