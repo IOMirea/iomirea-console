@@ -1,10 +1,7 @@
-const fetch         = require("node-fetch");
 const readline      = require("readline");
 const fs            = require("fs");
 const Client        = require("./structures/iomireaClient");
 const chalk         = require("chalk");
-const Channel       = require("./structures/Channel");
-const User          = require("./structures/User");
 const ConsoleHelper = require("./structures/ConsoleHelper");
 let config          = {};
 const client        = new Client();
