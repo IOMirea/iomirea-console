@@ -74,7 +74,8 @@ module.exports = class Client extends EventEmitter {
         return new Promise((resolve, reject) => {
             fetch(this.constructor.API_HOST + "users/@me/channels", {
                 headers: {
-                    "Authorization": token
+                    "Authorization": token,
+                    "Content-Type": "application/json"
                 }
             }).then(async r => {
                 if (r.status === 200) {
@@ -98,12 +99,13 @@ module.exports = class Client extends EventEmitter {
         });
     }
 
-    request(endpoint, json = false) {
+    request(endpoint, json = false, method = "GET") {
         return new Promise((resolve, reject) => {
             fetch(/^https?:\/\//.test(endpoint) ? endpoint : this.constructor.API_HOST + endpoint, {
                 headers: {
                     "Authorization": this.accessToken
-                }
+                },
+                method: method
             }).then(r => {
                 if (json === true) return r.json();
                 else return r.text();
