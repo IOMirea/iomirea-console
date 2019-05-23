@@ -68,16 +68,8 @@ module.exports = class Channel {
     fetchMessages(c) {
         return new Promise((resolve, reject) => {
             this.client.request(`channels/${this.id}/messages`, true).then(v => {
-                if (c === true) this.messages = this.messages.concat(v); //TODO: fix memory leak
+                if (c === true) this.messages = v;
                 resolve(v);
-            }).catch(reject);
-        });
-    }
-
-    refresh(r, c) {
-        return new Promise((resolve, reject) => {
-            this.fetchMessages(c).then(v => {
-                resolve(r ? v : undefined);
             }).catch(reject);
         });
     }
