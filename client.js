@@ -25,7 +25,9 @@ const client        = new Client();
         }
 
         client.login(config.ACCESS_TOKEN).catch(e => {
-            console.log(chalk.red("Error while logging in: " + e));
+            e = JSON.parse(e);
+            console.log(chalk.red("Error while logging in. " + e.message));
+            process.exit(1);
         });
     });
 })();
