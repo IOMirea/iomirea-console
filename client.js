@@ -84,6 +84,13 @@ async function showChannel(channel, state = 0) {
     }
     const spacePad = state === 2 ? 3 : 2;
     console.log(("\n").repeat(messages.length > process.stdout.rows ? 0 : process.stdout.rows - messages.length - spacePad) + (state === 2 ? "[CTRL+C] Back" : "[X] Send Message\t[C] Back to Channel Browser\t[R] Force Reload"));
+
+    if (state === 2) {
+        console.log("―".repeat(process.stdout.columns));
+        process.stdout.write("> ");
+        if (channel.inputText !== "") process.stdout.write(channel.inputText);
+    }
+
 }
 
 client.on("ready", () => {
@@ -92,7 +99,7 @@ client.on("ready", () => {
     showMenu();
 });
 
-process.stdin.on("keypress", str => {
+process.stdin.on("keypress", (str, { name }) => {
     if (rlState === 0) {
         ConsoleHelper.reset();
         if (str === "1") {
@@ -125,7 +132,6 @@ process.stdin.on("keypress", str => {
         rlState = 0;
     } else if (rlState === 3) {
         if (str === "x") {
-            //TODO: show channel with cached messages and send message section
             console.clear();
             showChannel(client.activeChannel, 2);
             rlState = 4;
@@ -141,6 +147,9 @@ process.stdin.on("keypress", str => {
                 showChannel(client.activeChannel, 1);
             });
         }
+    } else if (rlState === 4) {
+        if (name !== "backspace") client.activeChannel.inputText += str;
+        else client.activeChannel.inputText = client.activeChannel.inputText.slice(0, -1);
     }
 });
 
