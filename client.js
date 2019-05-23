@@ -8,6 +8,7 @@ const User          = require("./structures/User");
 const ConsoleHelper = require("./structures/ConsoleHelper");
 let config          = {};
 const client        = new Client();
+const modules       = new Map(fs.readdirSync("./modules/").filter(v => v.endsWith(".js")).map(v => [v.split(".")[0], require(`./modules/${v}`).run]));
 
 (() => {
     fs.readFile("./.config", "utf8", (err, data) => {
@@ -52,13 +53,6 @@ function formatDate(date) {
     return (date.getMonth() + 1) + "-" + date.getDate() + "-" + date.getFullYear() + " " + (date.getHours() < 10 ? ('0' + date.getHours()) : date.getHours()) + ":" + (date.getMinutes() < 10 ? ('0' + date.getMinutes()) : date.getMinutes());
 }
 
-function showMenu() {
-    console.log("―".repeat(process.stdout.columns < 50 ? process.stdout.columns : 50));
-    console.log("1)\tView Channel");
-    console.log("2)\tAccount Information");
-    console.log("3)\tExit");
-}
-
 function showAccount() {
     console.log("―".repeat(process.stdout.columns < 50 ? process.stdout.columns : 50));
     console.log(`ID\t\t${client.user.id}`);
@@ -98,7 +92,7 @@ async function showChannel(channel, state = 0) {
 client.on("ready", () => {
     console.log(chalk.green(`Connected! (${client.channels.size} Channels, ${((client.readyAt - client.instanceAt) / 1000).toFixed(2)}s)`));
     console.log(ConsoleHelper.iomirea);
-    showMenu();
+    modules.get("showMenu")();
 });
 
 process.stdin.on("keypress", (str, { name }) => {
@@ -113,7 +107,7 @@ process.stdin.on("keypress", (str, { name }) => {
             rlState = 2;
         }
         else if (str === "3") process.exit(0);
-        else showMenu();
+        else modules.get("showMenu")();
     } else if (rlState === 1) {
         const answer = parseInt(str);
         console.clear();
@@ -137,7 +131,7 @@ process.stdin.on("keypress", (str, { name }) => {
         }
     } else if (rlState === 2) {
         ConsoleHelper.reset();
-        showMenu();
+        modules.get("showMenu")();
         rlState = 0;
     } else if (rlState === 3) {
         if (str === "x") {
@@ -182,6 +176,6 @@ rl.on("SIGINT", () => {
     }
     client.removeActiveChannel();
     ConsoleHelper.reset();
-    showMenu();
+    modules.get("showMenu")();
     rlState = 0;
 });
