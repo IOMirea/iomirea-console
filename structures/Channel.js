@@ -1,3 +1,5 @@
+const fetch = require("node-fetch");
+
 module.exports = class Channel {
     constructor(id, name, owner_id, user_ids, pinned_ids, client) {
         this._id = id;
@@ -98,5 +100,18 @@ module.exports = class Channel {
                 if (typeof c === "function") c(v);
             });
         }, m);
+    }
+
+    send(content = this.inputText) {
+        return new Promise((resolve, reject) => {
+            fetch(`${this.client.constructor.API_HOST}channels/${this.id}/messages`, {
+                headers: {
+                    "Authorization": this.client.accessToken,
+                    "Content-Type": "application/json"
+                },
+                method: "POST",
+                body: JSON.stringify({ content })
+            }).catch(reject).then(r=>r.json()).then(resolve);
+        });
     }
 };
