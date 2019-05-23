@@ -48,7 +48,7 @@ let rlState = 0;
 
 console.log("\033[2J" + chalk.yellow("\nConnecting..."));
 
-function formatDate(date) {
+/*function formatDate(date) {
     if (!(date instanceof Date)) date = new Date(date);
     return (date.getMonth() + 1) + "-" + date.getDate() + "-" + date.getFullYear() + " " + (date.getHours() < 10 ? ('0' + date.getHours()) : date.getHours()) + ":" + (date.getMinutes() < 10 ? ('0' + date.getMinutes()) : date.getMinutes());
 }
@@ -87,7 +87,7 @@ async function showChannel(channel, state = 0) {
         if (channel.inputText !== "") process.stdout.write(channel.inputText);
     }
 
-}
+}*/
 
 client.on("ready", () => {
     console.log(chalk.green(`Connected! (${client.channels.size} Channels, ${((client.readyAt - client.instanceAt) / 1000).toFixed(2)}s)`));
@@ -99,11 +99,11 @@ process.stdin.on("keypress", (str, { name }) => {
     if (rlState === 0) {
         ConsoleHelper.reset();
         if (str === "1") {
-            showChannels();
+            modules.get("showChannels")(client);
             rlState = 1;
         }
         else if (str === "2") {
-            showAccount();
+            modules.get("showAccount")(client);
             rlState = 2;
         }
         else if (str === "3") process.exit(0);
@@ -112,19 +112,19 @@ process.stdin.on("keypress", (str, { name }) => {
         const answer = parseInt(str);
         console.clear();
         if (isNaN(answer)) {
-            showChannels();
+            modules.get("showChannels")(client);
         }
         else {
             const channel = Array.from(client.channels.values())[answer - 1];
             if (channel === undefined) return console.log(chalk.red("An error occured!"));
-            showChannel(channel);
+            modules.get("showChannel")(channel, client);
             client.activeChannel = channel;
             channel.handleMessages(n => {
                 if (channel.messages.length === n.length) return;
                 else {
                     channel.messages = n;
                     console.clear();
-                    showChannel(client.activeChannel, 1);
+                    modules.get("showChannel")(client.activeChannel, client, 1);
                 }
             }, 1e3);
             rlState = 3;
@@ -136,18 +136,18 @@ process.stdin.on("keypress", (str, { name }) => {
     } else if (rlState === 3) {
         if (str === "x") {
             console.clear();
-            showChannel(client.activeChannel, 2);
+            modules.get("showChannel")(client.activeChannel, client, 2);
             rlState = 4;
         } else if (str === "c") {
             ConsoleHelper.reset();
             rlState = 1;
             clearInterval(client.activeChannel.messageHandler);
             client.activeChannel = null;
-            showChannels();
+            modules.get("showChannels")(client);
         } else if (str === "r") {
             client.activeChannel.fetchMessages(true).then(() => {
                 console.clear();
-                showChannel(client.activeChannel, 1);
+                modules.get("showChannel")(client.activeChannel, client, 1);
             });
         }
     } else if (rlState === 4) {
@@ -170,7 +170,7 @@ process.stdin.on("keypress", (str, { name }) => {
 rl.on("SIGINT", () => {
     if (rlState === 4) {
         console.clear();
-        showChannel(client.activeChannel, 1);
+        modules.get("showChannel")(client.activeChannel, client, 1);
         rlState = 3;
         return;
     }
