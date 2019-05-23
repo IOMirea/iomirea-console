@@ -8,6 +8,7 @@ module.exports = class Channel {
         this._client = client;
         this._messages = [];
         this._messageHandler = null;
+        this._inputText = "";
     }
 
     get id() {
@@ -72,6 +73,14 @@ module.exports = class Channel {
 
     set messageHandler(val) {
         return this._messageHandler = val;
+    }
+
+    get inputText() {
+        return this._inputText;
+    }
+
+    set inputText(value) {
+        return this._inputText = value;
     }
 
     fetchMessages(c) {
