@@ -80,7 +80,7 @@ async function showChannel(channel, state = 0) {
     const messages = state === 0 ? await channel.fetchMessages(true) : channel.messages;
     for(let i=0;i<messages.length;++i) {
         const time = formatDate(Client.getTime(messages[i].id));
-        console.log("[" + time + "]" + (" ".repeat(20 - time.length)) + messages[i].author.name + ">" + (" ".repeat(10 - messages[i].author.name.length))+ messages[i].content.substr(1, process.stdout.columns || 2048));
+        console.log("[" + time + "]" + (" ".repeat(20 - time.length)) + messages[i].author.name + ">" + (" ".repeat(10 - messages[i].author.name.length))+ messages[i].content.substr(0, process.stdout.columns || 2048));
     }
     const spacePad = state === 2 ? 3 : 2;
     console.log(("\n").repeat(messages.length > process.stdout.rows ? 0 : process.stdout.rows - messages.length - spacePad) + (state === 2 ? "[CTRL+C] Back" : "[X] Send Message\t[C] Back to Channel Browser\t[R] Force Reload"));
@@ -148,8 +148,19 @@ process.stdin.on("keypress", (str, { name }) => {
             });
         }
     } else if (rlState === 4) {
-        if (name !== "backspace") client.activeChannel.inputText += str;
-        else client.activeChannel.inputText = client.activeChannel.inputText.slice(0, -1);
+        switch(name) {
+            case "backspace":
+                client.activeChannel.inputText = client.activeChannel.inputText.slice(0, -1);
+                break;
+            case "return":
+                client.activeChannel.send().then(() => {
+                    client.activeChannel.inputText = "";
+                });
+                break;
+            default:
+                client.activeChannel.inputText += str;
+                break;
+        }
     }
 });
 
