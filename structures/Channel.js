@@ -96,7 +96,7 @@ module.exports = class Channel {
 
     handleMessages(c, m) {
         this.messageHandler = setInterval(() => {
-            this.fetchMessages(true).then(v => {
+            this.fetchMessages(false).then(v => {
                 if (typeof c === "function") c(v);
             });
         }, m);
