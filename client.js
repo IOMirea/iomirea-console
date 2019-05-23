@@ -1,13 +1,13 @@
-const fetch    = require("node-fetch");
-const readline = require("readline");
-const fs       = require("fs");
-const Client   = require("./structures/iomireaClient");
-const chalk    = require("chalk");
-const Channel  = require("./structures/Channel");
-const User     = require("./structures/User");
-let config = {};
-
-const client = new Client();
+const fetch         = require("node-fetch");
+const readline      = require("readline");
+const fs            = require("fs");
+const Client        = require("./structures/iomireaClient");
+const chalk         = require("chalk");
+const Channel       = require("./structures/Channel");
+const User          = require("./structures/User");
+const ConsoleHelper = require("./structures/ConsoleHelper");
+let config          = {};
+const client        = new Client();
 
 (() => {
     fs.readFile("./.config", "utf8", (err, data) => {
@@ -86,24 +86,13 @@ async function showChannel(channel, state = 0) {
 
 client.on("ready", () => {
     console.log(chalk.green(`Connected! (${client.channels.size} Channels, ${((client.readyAt - client.instanceAt) / 1000).toFixed(2)}s)`));
-    console.log(`  _____ ____  __  __ _                
- |_   _/ __ \\|  \\/  (_)               
-   | || |  | | \\  / |_ _ __ ___  __ _ 
-   | || |  | | |\\/| | | '__/ _ \\/ _\` |
-  _| || |__| | |  | | | | |  __/ (_| |
- |_____\\____/|_|  |_|_|_|  \\___|\\__,_|\n`);
+    console.log(ConsoleHelper.iomirea);
     showMenu();
 });
 
 process.stdin.on("keypress", str => {
     if (rlState === 0) {
-        console.clear();
-        console.log(`  _____ ____  __  __ _                
- |_   _/ __ \\|  \\/  (_)               
-   | || |  | | \\  / |_ _ __ ___  __ _ 
-   | || |  | | |\\/| | | '__/ _ \\/ _\` |
-  _| || |__| | |  | | | | |  __/ (_| |
- |_____\\____/|_|  |_|_|_|  \\___|\\__,_|\n`);
+        ConsoleHelper.reset();
         if (str === "1") {
             showChannels();
             rlState = 1;
@@ -117,55 +106,42 @@ process.stdin.on("keypress", str => {
     } else if (rlState === 1) {
         const answer = parseInt(str);
         console.clear();
-        if (isNaN(answer)) return;
+        if (isNaN(answer)) {
+            showChannels();
+        }
         else {
             const channel = Array.from(client.channels.values())[answer - 1];
             if (channel === undefined) return console.log(chalk.red("An error occured!"));
             showChannel(channel);
             client.activeChannel = channel;
+            channel.handleMessages(undefined, 1e3);
             rlState = 3;
         }
-
     } else if (rlState === 2) {
-        console.clear();
-        console.log(`  _____ ____  __  __ _                
- |_   _/ __ \\|  \\/  (_)               
-   | || |  | | \\  / |_ _ __ ___  __ _ 
-   | || |  | | |\\/| | | '__/ _ \\/ _\` |
-  _| || |__| | |  | | | | |  __/ (_| |
- |_____\\____/|_|  |_|_|_|  \\___|\\__,_|\n`);
+        ConsoleHelper.reset();
         showMenu();
         rlState = 0;
     } else if (rlState === 3) {
         if (str === "x") {
             //TODO: show channel with cached messages and send message section
         } else if (str === "c") {
-            console.clear();
-            console.log(`  _____ ____  __  __ _                
- |_   _/ __ \\|  \\/  (_)               
-   | || |  | | \\  / |_ _ __ ___  __ _ 
-   | || |  | | |\\/| | | '__/ _ \\/ _\` |
-  _| || |__| | |  | | | | |  __/ (_| |
- |_____\\____/|_|  |_|_|_|  \\___|\\__,_|\n`);
+            ConsoleHelper.reset();
             rlState = 1;
+            clearInterval(client.activeChannel.messageHandler);
+            client.activeChannel = null;
             showChannels(client.activeChannel, 1);
         } else if (str === "r") {
             client.activeChannel.fetchMessages(true).then(() => {
                 console.clear();
-                showChannel(client.activeChannel);
+                showChannel(client.activeChannel, 1);
             });
         }
     }
 });
 
 rl.on("SIGINT", () => {
-    console.clear();
-    console.log(`  _____ ____  __  __ _                
- |_   _/ __ \\|  \\/  (_)               
-   | || |  | | \\  / |_ _ __ ___  __ _ 
-   | || |  | | |\\/| | | '__/ _ \\/ _\` |
-  _| || |__| | |  | | | | |  __/ (_| |
- |_____\\____/|_|  |_|_|_|  \\___|\\__,_|\n`);
+    client.removeActiveChannel();
+    ConsoleHelper.reset();
     showMenu();
     rlState = 0;
 });
