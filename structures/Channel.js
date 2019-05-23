@@ -111,7 +111,7 @@ module.exports = class Channel {
                 },
                 method: "POST",
                 body: JSON.stringify({ content })
-            }).catch(reject).then(r=>r.json()).then(resolve);
+            }).catch(reject).then(r=>r.text()).then(resolve);
         });
     }
 };
