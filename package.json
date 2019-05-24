@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "iomirea": "node client.js"
+    "iomirea": "node client.js",
+    "setup": "node ⅎ.js"
   },
   "author": "y21",
   "license": "ISC",
