@@ -83,8 +83,10 @@ process.stdin.on("keypress", async (str, {name}) => {
                 if (channel.messages.length === n.length) return;
                 else {
                     channel.messages = n;
-                    console.clear();
-                    showChannel(client.activeChannel, client, 1);
+                    if (rlState === 3) {
+                        console.clear();
+                        showChannel(client.activeChannel, client, 1);
+                    }
                 }
             }, 1e3);
             rlState = 3;
