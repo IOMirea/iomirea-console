@@ -1,6 +1,7 @@
 import fetch from 'node-fetch';
 import Client from './Client';
 import Timeout = NodeJS.Timeout;
+import Message from '../structures/Message'
 
 export default class Channel {
     private _id: string;
@@ -9,7 +10,7 @@ export default class Channel {
     private _user_ids: Array<string>;
     private _pinned_ids: Array<string>;
     private _client: Client;
-    private _messages: Array<string> = [];
+    private _messages: Array<Message> = [];
     private _messageHandler: Timeout = null;
     private _inputText: string = "";
 
@@ -71,11 +72,11 @@ export default class Channel {
         this._client = value;
     }
 
-    get messages(): Array<string> {
+    get messages(): Array<Message> {
         return this._messages;
     }
 
-    set messages(value: Array<string>) {
+    set messages(value: Array<Message>) {
         this._messages = value;
     }
 
@@ -95,7 +96,7 @@ export default class Channel {
         this._inputText = value;
     }
 
-    fetchMessages(c: boolean): Promise<Array<string>> {
+    fetchMessages(c: boolean): Promise<Array<Message>> {
         return new Promise((resolve, reject) => {
             this.client.request(`channels/${this.id}/messages`, true).then(v => {
                 if (c === true) this.messages = v;
@@ -104,7 +105,7 @@ export default class Channel {
         });
     }
 
-    handleMessages(c: (msgs: Array<string>) => any, m: number) {
+    handleMessages(c: (msgs: Array<Message>) => any, m: number) {
         this.messageHandler = setInterval(() => {
             this.fetchMessages(false).then(v => {
                 if (typeof c === "function") c(v);
