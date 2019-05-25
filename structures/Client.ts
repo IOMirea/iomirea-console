@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import Channel from './ChannelT';
+import Channel from './Channel';
 import User from './User';
 import ClientUser from './ClientUser';
 import fetch from 'node-fetch';
