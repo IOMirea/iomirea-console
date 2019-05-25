@@ -25,6 +25,17 @@ cd iomirea-client
 npm install
 ```
 
+3. Install typescript globally if it is not installed on your machine already
+```sh
+npm install typescript -g
+```
+
+4. Transpile the source code into executable JavaScript code
+> If this errors, make sure 
+```ssh
+npm run transpile
+```
+
 3. Create a file named `.config` if it does not exist already and add the following contents (replace `token` with your actual access token):
 ```sh
 ACCESS_TOKEN=token
