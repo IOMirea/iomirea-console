@@ -91,13 +91,7 @@ export default class Client extends EventEmitter {
                 if (r.status === 200) {
                     this.accessToken = token;
                     this.readyAt = Date.now();
-                    const channels: Array<{
-                        id: string,
-                        name: string,
-                        owner_id: string,
-                        user_ids: Array<string>,
-                        pinned_ids: Array<string>
-                    }> = await r.json();
+                    const channels: Array<Channel> = await r.json();
                     for(let i: number = 0; i < channels.length; ++i) {
                         const tempChannel: Channel = new Channel(channels[i].id, channels[i].name, channels[i].owner_id, channels[i].user_ids, channels[i].pinned_ids, this);
                         this.channels.set(tempChannel.id, tempChannel);
