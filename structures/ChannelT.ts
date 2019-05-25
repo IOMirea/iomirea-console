@@ -13,7 +13,7 @@ export default class Channel {
     private _messageHandler: Timeout = null;
     private _inputText: string = "";
 
-    constructor(id, name, owner_id, user_ids, pinned_ids, client) {
+    constructor(id: string, name: string, owner_id: string, user_ids: Array<string>, pinned_ids: Array<string>, client: Client) {
         this.id = id;
         this.name = name;
         this.owner_id = owner_id;
