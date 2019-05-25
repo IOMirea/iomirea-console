@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 import Channel from './ChannelT';
-import User from './User.js';
+import User from './User';
 import fetch from 'node-fetch';
 
 export default class Client extends EventEmitter {
@@ -129,7 +129,7 @@ export default class Client extends EventEmitter {
         });
     }
 
-    fetchUser(user: string): Promise<{id:string}> {
+    fetchUser(user: string): Promise<User> {
         return new Promise((resolve, reject) => {
             this.request(`users/${user}`, true).then(resolve).catch(reject);
         });
