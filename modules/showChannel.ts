@@ -10,8 +10,8 @@ export default async function(channel: Channel|string, client: Client, state: nu
         const time: string = formatDate(Client.getTime(messages[i].id));
         console.log("[" + time + "] " + (" ".repeat(15 - time.length)) + "│ " + messages[i].author.name + (" ".repeat(10 - messages[i].author.name.length)) + "│ " + messages[i].content.substr(0, process.stdout.columns || 2048));
     }
-    const spacePad: number = state === 2 ? 3 : 2;
-    console.log(("\n").repeat(messages.length > process.stdout.rows ? 0 : process.stdout.rows - messages.length - spacePad) + (state === 2 ? "[CTRL+C] Back" : "[X] Send Message\t[C] Back to Channel Browser\t[R] Force Reload"));
+    let spacePad: number = state === 2 ? 3 : 2;
+    console.log(("\n").repeat(messages.length > process.stdout.rows - spacePad ? 0 : process.stdout.rows - messages.length - spacePad) + (state === 2 ? "[CTRL+C] Back" : "[X] Send Message\t[C] Back to Channel Browser\t[R] Force Reload"));
 
     if (state === 2) {
         console.log("―".repeat(process.stdout.columns));
