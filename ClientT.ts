@@ -10,6 +10,7 @@ import showAccount from './modules/showAccountT';
 import showChannel from './modules/showChannelT';
 import showChannels from './modules/showChannelsT';
 import showMenu from './modules/showMenuT';
+import Channel from "./structures/ChannelT";
 
 const config: object = {};
 const client: Client = new Client();
@@ -54,6 +55,87 @@ client.on("ready", () => {
     showMenu();
 });
 
-process.stdin.on("keypress", (str, { name }) => {
+process.stdin.on("keypress", async (str, {name}) => {
+    if (rlState === 0) {
+        ConsoleHelper.reset();
+        if (str === "1") {
+            showChannels(client);
+            rlState = 1;
+        }
+        else if (str === "2") {
+            showAccount(client);
+            rlState = 2;
+        }
+        else if (str === "3") process.exit(0);
+        else showMenu();
+    } else if (rlState === 1) {
+        const answer = parseInt(str);
+        console.clear();
+        if (isNaN(answer)) {
+            showChannels(client);
+        }
+        else {
+            const channel: Channel = Array.from(client.channels.values())[answer - 1];
+            if (channel === undefined) return console.log(chalk.red("An error occured!"));
+            await showChannel(channel, client);
+            client.activeChannel = channel;
+            channel.handleMessages(n => {
+                if (channel.messages.length === n.length) return;
+                else {
+                    channel.messages = n;
+                    console.clear();
+                    showChannel(client.activeChannel, client, 1);
+                }
+            }, 1e3);
+            rlState = 3;
+        }
+    } else if (rlState === 2) {
+        ConsoleHelper.reset();
+        showMenu();
+        rlState = 0;
+    } else if (rlState === 3) {
+        if (str === "x") {
+            console.clear();
+            showChannel(client.activeChannel, client, 2);
+            rlState = 4;
+        } else if (str === "c") {
+            ConsoleHelper.reset();
+            rlState = 1;
+            clearInterval(client.activeChannel.messageHandler);
+            client.activeChannel = null;
+            showChannels(client);
+        } else if (str === "r") {
+            client.activeChannel.fetchMessages(true).then(() => {
+                console.clear();
+                showChannel(client.activeChannel, client, 1);
+            });
+        }
+    } else if (rlState === 4) {
+        switch (name) {
+            case "backspace":
+                client.activeChannel.inputText = client.activeChannel.inputText.slice(0, -1);
+                break;
+            case "return":
+                client.activeChannel.send().then(() => {
+                    client.activeChannel.inputText = "";
+                });
+                break;
+            default:
+                client.activeChannel.inputText += str;
+                break;
+        }
+    }
+});
 
+rl.on("SIGINT", () => {
+    if (rlState === 4) {
+        console.clear();
+        showChannel(client.activeChannel, client, 1);
+        rlState = 3;
+        return;
+    }
+    client.removeActiveChannel();
+    ConsoleHelper.reset();
+    showMenu();
+    rlState = 0;
 });
