@@ -120,6 +120,9 @@ process.stdin.on("keypress", async (str, {name}) => {
             case "return":
                 client.activeChannel.send().then(() => {
                     client.activeChannel.inputText = "";
+                    console.clear();
+                    showChannel(client.activeChannel, client, 1);
+                    rlState = 3;
                 });
                 break;
             default:
