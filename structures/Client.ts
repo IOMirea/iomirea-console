@@ -1,6 +1,7 @@
 import { EventEmitter } from 'events';
 import Channel from './ChannelT';
 import User from './User';
+import ClientUser from './ClientUser';
 import fetch from 'node-fetch';
 
 export default class Client extends EventEmitter {
@@ -9,7 +10,7 @@ export default class Client extends EventEmitter {
     private _accessToken: string;
     private _instanceAt: number = Date.now();
     private _readyAt: number = null;
-    private _user: User = null;
+    private _user: ClientUser = null;
     private _activeChannel: Channel = null;
     static API_HOST: string = "https://iomirea.ml/api/v0/";
 
@@ -58,11 +59,11 @@ export default class Client extends EventEmitter {
         this._readyAt = value;
     }
 
-    get user(): User {
+    get user(): ClientUser {
         return this._user;
     }
 
-    set user(value: User) {
+    set user(value: ClientUser) {
         this._user = value;
     }
 
@@ -102,8 +103,9 @@ export default class Client extends EventEmitter {
                         this.channels.set(tempChannel.id, tempChannel);
                     }
                     await this.fetchUser("@me").then(u => {
-                        this.user = u;
-                        this.users.set(u.id, u);
+                        const user = new ClientUser(u.id, u.name, u.bot, u.email);
+                        this.user = user;
+                        this.users.set(user.id, user);
                     });
                     this.emit("ready");
                     resolve(this);
@@ -129,7 +131,7 @@ export default class Client extends EventEmitter {
         });
     }
 
-    fetchUser(user: string): Promise<User> {
+    fetchUser(user: string): Promise<any> {
         return new Promise((resolve, reject) => {
             this.request(`users/${user}`, true).then(resolve).catch(reject);
         });
