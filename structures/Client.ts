@@ -129,7 +129,19 @@ export default class Client extends EventEmitter {
         });
     }
 
-    fetchUser(s: string): Promise<{id:string}> {
-        return new Promise((a,b)=>a({id:'1'}));
+    fetchUser(user: string): Promise<{id:string}> {
+        return new Promise((resolve, reject) => {
+            this.request(`users/${user}`, true).then(resolve).catch(reject);
+        });
+    }
+
+    removeActiveChannel(): void {
+        if (this.activeChannel instanceof Channel) clearInterval(this.activeChannel.messageHandler);
+        this.activeChannel = null;
+    }
+
+    static getTime(snowflake: string) {
+        // @ts-ignore
+        return parseInt(BigInt(1546300800) + (BigInt(snowflake) >> BigInt(22)) / BigInt(1000)) * 1000;
     }
 }
