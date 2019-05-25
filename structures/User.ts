@@ -3,7 +3,7 @@ export default class User {
     private _name: string;
     private _bot: boolean;
 
-    constructor(id: string, name: string, bot: boolean) {
+    constructor(id?: string, name?: string, bot?: boolean) {
         this.id = id;
         this.name = name;
         this.bot = bot;
