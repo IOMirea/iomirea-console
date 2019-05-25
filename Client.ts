@@ -5,12 +5,12 @@ import ConsoleHelper from './structures/ConsoleHelperT';
 import chalk from "chalk";
 
 // Helper module imports
-import formatDate from './modules/formatDateT';
-import showAccount from './modules/showAccountT';
-import showChannel from './modules/showChannelT';
-import showChannels from './modules/showChannelsT';
-import showMenu from './modules/showMenuT';
-import Channel from "./structures/ChannelT";
+import formatDate from './modules/formatDate';
+import showAccount from './modules/showAccount';
+import showChannel from './modules/showChannel';
+import showChannels from './modules/showChannels';
+import showMenu from './modules/showMenu';
+import Channel from "./structures/Channel";
 
 const config: object = {};
 const client: Client = new Client();
