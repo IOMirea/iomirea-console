@@ -1,5 +1,5 @@
 import Client from '../structures/Client';
-import Channel from "../structures/ChannelT";
+import Channel from "../structures/Channel";
 
 export default function(client: Client) {
     const channels: Array<Channel> = Array.from(client.channels.values());

@@ -1,5 +1,5 @@
-import formatDate from './formatDateT';
-import Channel from '../structures/ChannelT';
+import formatDate from './formatDate';
+import Channel from '../structures/Channel';
 import Client from '../structures/Client';
 import Message from '../structures/Message'
 
