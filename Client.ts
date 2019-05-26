@@ -56,8 +56,8 @@ client.on("ready", () => {
 });
 
 process.stdin.on("keypress", async (str, {name}) => {
-    if (rlState === 0 && str !== "3") {
-        ConsoleHelper.reset();
+    if (rlState === 0) {
+        if (str !== "3") ConsoleHelper.reset();
         if (str === "1") {
             showChannels(client);
             rlState = 1;
