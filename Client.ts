@@ -68,7 +68,7 @@ process.stdin.on("keypress", async (str, {name}) => {
             showAccount(client);
             rlState = 2;
         }
-        else if (str === "4") {
+        else if (str === "3") {
             showSettings(config);
             rlState = 5;
         }
