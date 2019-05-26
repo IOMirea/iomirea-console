@@ -59,21 +59,26 @@ client.on("ready", () => {
 
 process.stdin.on("keypress", async (str, {name}) => {
     if (rlState === 0) {
-        if (str !== "3") ConsoleHelper.reset();
         if (str === "1") {
+            ConsoleHelper.reset();
             showChannels(client);
             rlState = 1;
         }
         else if (str === "2") {
+            ConsoleHelper.reset();
             showAccount(client);
             rlState = 2;
         }
         else if (str === "3") {
+            ConsoleHelper.reset();
             showSettings(config);
             rlState = 5;
         }
         else if (str === "4") process.exit(0);
-        else showMenu();
+        else {
+            ConsoleHelper.reset();
+            showMenu();
+        }
     } else if (rlState === 1) {
         const answer = parseInt(str);
         console.clear();
