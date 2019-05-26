@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import Client from './structures/Client';
 import ConsoleHelper from './structures/ConsoleHelperT';
 import chalk from "chalk";
+import { writeFile } from 'fs';
 
 // Helper module imports
 import formatDate from './modules/formatDate';
@@ -22,10 +23,11 @@ fs.readFile("./.config", "utf8", (err, data) => {
         process.exit(1);
     }
     for (const { key, value } of data.split("\n").map(v => ({ key: v.split("=")[0], value: v.substr(v.indexOf("=") + 1) }))) {
-        Object.defineProperty(config, key, {
+        /*Object.defineProperty(config, key, {
             value,
             writable: false
-        });
+        });*/
+        config[key] = value;
     }
 
     client.login(config["ACCESS_TOKEN"]).catch(e => {
@@ -158,9 +160,14 @@ process.stdin.on("keypress", async (str, {name}) => {
         }
     } else if (rlState === 6) {
         if (name === "return") {
-            ConsoleHelper.reset();
-            showSettings(config);
-            console.log(chalk.green("Successfully updated Access Token!"));
+            client.accessToken = tempInput;
+            config["ACCESS_TOKEN"] = tempInput;
+            writeFile("./.config", Object.entries(config).map(v => v[0] + "=" + v[1]).join("\n"), (err) => {
+                if (err) return console.log(chalk.red(err.toString()));
+                ConsoleHelper.reset();
+                showSettings(config);
+                console.log(chalk.green("Successfully updated Access Token!"));
+            });
             tempInput = "";
             rlState = 5;
             return;
