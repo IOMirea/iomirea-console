@@ -9,7 +9,7 @@ export default async function(channel: Channel|string, client: Client, state: nu
     const messages: Array<Message> = state === 0 ? await channel.fetchMessages(true) : channel.messages;
     for(let i: number = 0; i < messages.length; ++i) {
         const time: string = formatDate(Client.getTime(messages[i].id));
-        console.log("[" + time + "] " + (" ".repeat(15 - time.length)) + "│ " + messages[i].author.name + " " + (chalk.cyan(messages[i].author.bot ? "[BOT]": "[User]")) + (" ".repeat(10 - messages[i].author.name.length)) + "│ " + messages[i].content.substr(0, process.stdout.columns || 2048));
+        console.log("[" + time + "] " + (" ".repeat(15 - time.length)) + "│ " + messages[i].author.name + " " + (chalk.cyan(messages[i].author.bot ? "[Bot]": "[User]")) + (" ".repeat(10 - messages[i].author.name.length)) + "│ " + messages[i].content.substr(0, process.stdout.columns || 2048));
     }
     let spacePad: number = state === 2 ? 3 : 2;
     console.log(("\n").repeat(messages.length > process.stdout.rows - spacePad ? 0 : process.stdout.rows - messages.length - spacePad) + (state === 2 ? "[CTRL+C] Back" : "[X] Send Message\t[C] Back to Channel Browser\t[R] Force Reload"));
