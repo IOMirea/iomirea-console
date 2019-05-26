@@ -144,7 +144,8 @@ process.stdin.on("keypress", async (str, {name}) => {
             // Change Color Scheme
         } else if (str === "4") {
             ConsoleHelper.reset();
-            rlState = 1;
+            showMenu();
+            rlState = 0;
         }
     }
 });
