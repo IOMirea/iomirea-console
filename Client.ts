@@ -10,6 +10,7 @@ import showAccount from './modules/showAccount';
 import showChannel from './modules/showChannel';
 import showChannels from './modules/showChannels';
 import showMenu from './modules/showMenu';
+import showSettings from './modules/showSettings';
 import Channel from "./structures/Channel";
 
 const config: object = {};
@@ -45,6 +46,7 @@ const rl: readline.Interface = readline.createInterface({
 // 2 = Account Information
 // 3 = Channel Browser
 // 4 = Channel Browser (Send Message)
+// 5 = Settings
 let rlState: number = 0;
 
 console.log(chalk.yellow("Connecting..."));
@@ -66,7 +68,11 @@ process.stdin.on("keypress", async (str, {name}) => {
             showAccount(client);
             rlState = 2;
         }
-        else if (str === "3") process.exit(0);
+        else if (str === "4") {
+            showSettings(config);
+            rlState = 5;
+        }
+        else if (str === "4") process.exit(0);
         else showMenu();
     } else if (rlState === 1) {
         const answer = parseInt(str);
@@ -128,6 +134,17 @@ process.stdin.on("keypress", async (str, {name}) => {
             default:
                 client.activeChannel.inputText += str;
                 break;
+        }
+    } else if (rlState === 5) { //TODO
+        if (str === "1") {
+            // Change Access Token
+        } else if (str === "2") {
+            // Change Language
+        } else if (str === "3") {
+            // Change Color Scheme
+        } else if (str === "4") {
+            ConsoleHelper.reset();
+            rlState = 1;
         }
     }
 });
