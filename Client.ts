@@ -47,7 +47,9 @@ const rl: readline.Interface = readline.createInterface({
 // 3 = Channel Browser
 // 4 = Channel Browser (Send Message)
 // 5 = Settings
+// 6 = Settings (Change Access Token)
 let rlState: number = 0;
+let tempInput: string = "";
 
 console.log(chalk.yellow("Connecting..."));
 
@@ -143,6 +145,8 @@ process.stdin.on("keypress", async (str, {name}) => {
     } else if (rlState === 5) { //TODO
         if (str === "1") {
             // Change Access Token
+            process.stdout.write("\n" + chalk.yellow("New Access Token: "));
+            rlState = 6;
         } else if (str === "2") {
             // Change Language
         } else if (str === "3") {
@@ -152,6 +156,16 @@ process.stdin.on("keypress", async (str, {name}) => {
             showMenu();
             rlState = 0;
         }
+    } else if (rlState === 6) {
+        if (name === "return") {
+            ConsoleHelper.reset();
+            showSettings(config);
+            console.log(chalk.green("Successfully updated Access Token!"));
+            tempInput = "";
+            rlState = 5;
+            return;
+        } else if (name === "backspace") tempInput = tempInput.slice(0, -1);
+        tempInput += str;
     }
 });
 
@@ -166,4 +180,5 @@ rl.on("SIGINT", () => {
     ConsoleHelper.reset();
     showMenu();
     rlState = 0;
+    tempInput = "";
 });
