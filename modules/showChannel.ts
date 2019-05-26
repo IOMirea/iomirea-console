@@ -8,6 +8,7 @@ export default async function(channel: Channel|string, client: Client, state: nu
     if (typeof channel === "string") channel = client.channels.get(channel);
     const messages: Array<Message> = state === 0 ? await channel.fetchMessages(true) : channel.messages;
     for(let i: number = 0; i < messages.length; ++i) {
+        messages[i].content = messages[i].content.replace(/\n/g, '\n\t\t\t\t\t|');
         const time: string = formatDate(Client.getTime(messages[i].id));
         console.log("[" + time + "] " + (" ".repeat(15 - time.length)) + "│ " + messages[i].author.name + " " + (chalk.cyan(messages[i].author.bot ? "[Bot]": "[User]")) + (" ".repeat(10 - messages[i].author.name.length)) + "│ " + messages[i].content.substr(0, process.stdout.columns || 2048));
     }
