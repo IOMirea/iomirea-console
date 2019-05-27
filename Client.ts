@@ -33,6 +33,7 @@ const client: Client = new Client();
 // 4 = Channel Browser (Send Message)
 // 5 = Settings
 // 6 = Settings (Change Access Token)
+// 7 = Settings (Languages)
 let rlState: number = 0;
 let tempInput: string = "";
 let rl: readline.Interface = readline.createInterface({
@@ -175,6 +176,7 @@ process.stdin.on("keypress", async (str, {name}) => {
             rlState = 6;
         } else if (str === "2") {
             // Change Language
+
         } else if (str === "3") {
             // Change Color Scheme
         } else if (str === "4") {
@@ -185,12 +187,13 @@ process.stdin.on("keypress", async (str, {name}) => {
     } else if (rlState === 6) {
         if (name === "return") {
             client.accessToken = tempInput;
-            config["ACCESS_TOKEN"] = tempInput;
-            writeFile("./.config", Object.entries(config).map(v => v[0] + "=" + v[1]).join("\n"), (err) => {
-                if (err) return console.log(chalk.red(err.toString()));
+            config.ACCESS_TOKEN = tempInput;
+            writeConfig(config).then(() => {
                 ConsoleHelper.reset();
                 showSettings(config);
                 console.log(chalk.green("Successfully updated Access Token!"));
+            }).catch(err => {
+                console.log(chalk.red(err));
             });
             tempInput = "";
             rlState = 5;
