@@ -82,25 +82,7 @@ client.on("ready", () => {
 });
 
 process.stdin.on("keypress", async (str, {name}) => {
-    if (rlState === -1) {
-        switch(name) {
-            case "return":
-                client.accessToken = tempInput;
-                tempInput = "";
-
-
-                break;
-            case "backspace":
-                tempInput = tempInput.slice(0, -1);
-                break;
-            default:
-                tempInput += str;
-                break;
-        }
-
-
-
-    } else if (rlState >= 0 && rlState < 1) {
+    if (rlState >= 0 && rlState < 1) {
         if (name === "down") {
             ConsoleHelper.reset();
             if (rlState === 0 || rlState === 0.1) showMenu(rlState = 0.2);
