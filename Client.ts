@@ -81,7 +81,7 @@ process.stdin.on("keypress", async (str, {name}) => {
             else if (rlState === 0.4) showMenu(rlState = 0.3);
             else showMenu(rlState = 0.1);
         } else if (name === "return") {
-            ConsoleHelper.reset();
+            if (rlState !== 0.4) ConsoleHelper.reset();
             if (rlState === 0 || rlState === 0.1) {
                 rlState = 1;
                 showChannels(client);
