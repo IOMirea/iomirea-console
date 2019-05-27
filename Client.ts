@@ -58,9 +58,10 @@ fs.readFile("./.config", "utf8", (err, data) => {
     if (!config.hasOwnProperty("ACCESS_TOKEN")) { // No access token provided
         rl.question("Access Token: ", r => {
             config.ACCESS_TOKEN = r;
-            writeConfig(config);
+            writeConfig(config).catch(err => {
+                console.log(chalk.red(err));
+            });
         });
-        return;
     }
 
     console.log(config);
