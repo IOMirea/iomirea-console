@@ -9,12 +9,12 @@ const texts: object = {
 
 export default function(state: number) {
     console.log("―".repeat(process.stdout.columns < 50 ? process.stdout.columns : 50));
-    if (state === 0 || state === 0.1) console.log(chalk.inverse(texts["VIEW_CHANNEL"] + " ".repeat(50 - texts["VIEW_CHANNEL"].length)));
+    if (state === 0 || state === 0.1) console.log(chalk.inverse(" ".repeat(25 - texts["VIEW_CHANNEL"].length / 2) + texts["VIEW_CHANNEL"] + " ".repeat(25 - texts["VIEW_CHANNEL"].length / 2)));
     else console.log(texts["VIEW_CHANNEL"]);
-    if (state === 0.2) console.log(chalk.inverse(texts["ACCOUNT_INFO"] + " ".repeat(50 - texts["ACCOUNT_INFO"].length)));
+    if (state === 0.2) console.log(chalk.inverse(" ".repeat(25 - texts["ACCOUNT_INFO"].length / 2) + texts["ACCOUNT_INFO"] + " ".repeat(25 - texts["ACCOUNT_INFO"].length / 2)));
     else console.log(texts["ACCOUNT_INFO"]);
-    if (state === 0.3) console.log(chalk.inverse(texts["SETTINGS"] + " ".repeat(50 - texts["SETTINGS"].length)));
+    if (state === 0.3) console.log(chalk.inverse(" ".repeat(25 - texts["SETTINGS"].length / 2) + texts["SETTINGS"] + " ".repeat(25 - texts["SETTINGS"].length / 2)));
     else console.log(texts["SETTINGS"]);
-    if (state === 0.4) console.log(chalk.inverse(texts["EXIT"] + " ".repeat(50 - texts["EXIT"].length)));
+    if (state === 0.4) console.log(chalk.inverse(" ".repeat(25 - texts["EXIT"].length / 2) + texts["EXIT"] + " ".repeat(25 - texts["EXIT"].length / 2)));
     else console.log(texts["EXIT"]);
 }
