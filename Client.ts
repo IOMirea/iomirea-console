@@ -1,9 +1,12 @@
+// Structure and package imports
 import * as readline from 'readline';
 import * as fs from 'fs';
-import Client from './structures/Client';
-import ConsoleHelper from './structures/ConsoleHelperT';
 import chalk from "chalk";
 import { writeFile } from 'fs';
+import Client from './structures/Client';
+import ConsoleHelper from './structures/ConsoleHelperT';
+import Config from './structures/Config';
+import Channel from "./structures/Channel";
 
 // Helper module imports
 import formatDate from './modules/formatDate';
@@ -12,37 +15,13 @@ import showChannel from './modules/showChannel';
 import showChannels from './modules/showChannels';
 import showMenu from './modules/showMenu';
 import showSettings from './modules/showSettings';
-import Channel from "./structures/Channel";
+import writeConfig from './modules/writeConfig';
 
-const config: object = {};
+const config: Config = {};
 const client: Client = new Client();
 
-fs.readFile("./.config", "utf8", (err, data) => {
-    if (err) {
-        console.log(chalk.red("An error occured while trying to open .config"));
-        process.exit(1);
-    }
-    for (const { key, value } of data.split("\n").map(v => ({ key: v.split("=")[0], value: v.substr(v.indexOf("=") + 1) }))) {
-        /*Object.defineProperty(config, key, {
-            value,
-            writable: false
-        });*/
-        config[key] = value;
-    }
-
-    client.login(config["ACCESS_TOKEN"]).catch(e => {
-        const parsed: object = JSON.parse(e);
-        console.log(chalk.red("Error while logging in. " + e.message));
-        process.exit(1);
-    });
-});
-
-const rl: readline.Interface = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
-
 // rlState
+// -1 = Access Token Input
 // 0 = Menu Selection
 // 0.1 = Menu - View Channel
 // 0.2 = Menu - Account Information
@@ -56,6 +35,42 @@ const rl: readline.Interface = readline.createInterface({
 // 6 = Settings (Change Access Token)
 let rlState: number = 0;
 let tempInput: string = "";
+let rl: readline.Interface = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+
+fs.readFile("./.config", "utf8", (err, data) => {
+    if (err) {
+        console.log(chalk.red("An error occurred while trying to open .config"));
+        process.exit(1);
+    }
+    let conf: Array<{ key: string, value: string }> = data.split("\n").map(v => ({ key: v.split("=")[0], value: v.substr(v.indexOf("=") + 1) }));
+    if (conf.some(v => v.value.endsWith("\r"))) conf = conf.map(v => ({ key: v.key, value: v.value.slice(0, -1) }));
+    for (const { key, value } of conf) {
+        /*Object.defineProperty(config, key, {
+            value,
+            writable: false
+        });*/
+        config[key] = value;
+    }
+
+    if (!config.hasOwnProperty("ACCESS_TOKEN")) { // No access token provided
+        rl.question("Access Token: ", r => {
+            config.ACCESS_TOKEN = r;
+            writeConfig(config);
+        });
+        return;
+    }
+
+    console.log(config);
+
+    client.login(config["ACCESS_TOKEN"]).catch(e => {
+        const parsed: object = JSON.parse(e);
+        console.log(chalk.red("Error while logging in. " + e.message));
+        process.exit(1);
+    });
+});
 
 console.clear();
 console.log(chalk.yellow("Connecting..."));
@@ -67,7 +82,25 @@ client.on("ready", () => {
 });
 
 process.stdin.on("keypress", async (str, {name}) => {
-    if (rlState >= 0 && rlState < 1) {
+    if (rlState === -1) {
+        switch(name) {
+            case "return":
+                client.accessToken = tempInput;
+                tempInput = "";
+
+
+                break;
+            case "backspace":
+                tempInput = tempInput.slice(0, -1);
+                break;
+            default:
+                tempInput += str;
+                break;
+        }
+
+
+
+    } else if (rlState >= 0 && rlState < 1) {
         if (name === "down") {
             ConsoleHelper.reset();
             if (rlState === 0 || rlState === 0.1) showMenu(rlState = 0.2);
