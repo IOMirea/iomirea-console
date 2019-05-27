@@ -1,10 +1,10 @@
 import chalk from 'chalk';
 
 const texts: object = {
-    VIEW_CHANNEL: "1)    View Channel",
-    ACCOUNT_INFO: "2)    Account Information",
-    SETTINGS:     "3)    Settings",
-    EXIT:         "4)    Exit"
+    VIEW_CHANNEL: "View Channel",
+    ACCOUNT_INFO: "Account Information",
+    SETTINGS:     "Settings",
+    EXIT:         "Exit"
 };
 
 export default function(state: number) {
@@ -17,6 +17,4 @@ export default function(state: number) {
     else console.log(texts["SETTINGS"]);
     if (state === 0.4) console.log(chalk.inverse(texts["EXIT"] + " ".repeat(50 - texts["EXIT"].length)));
     else console.log(texts["EXIT"]);
-
-    console.log(state);
 }
