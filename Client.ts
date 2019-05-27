@@ -48,10 +48,6 @@ fs.readFile("./.config", "utf8", (err, data) => {
     let conf: Array<{ key: string, value: string }> = data.split("\n").map(v => ({ key: v.split("=")[0], value: v.substr(v.indexOf("=") + 1) }));
     if (conf.some(v => v.value.endsWith("\r"))) conf = conf.map(v => ({ key: v.key, value: v.value.slice(0, -1) }));
     for (const { key, value } of conf) {
-        /*Object.defineProperty(config, key, {
-            value,
-            writable: false
-        });*/
         config[key] = value;
     }
 
