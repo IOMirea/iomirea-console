@@ -57,6 +57,7 @@ const rl: readline.Interface = readline.createInterface({
 let rlState: number = 0;
 let tempInput: string = "";
 
+console.clear();
 console.log(chalk.yellow("Connecting..."));
 
 client.on("ready", () => {
