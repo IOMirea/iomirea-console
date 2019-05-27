@@ -8,7 +8,6 @@ const texts: object = {
 };
 
 export default function(state: number) {
-    console.log("―".repeat(process.stdout.columns < 50 ? process.stdout.columns : 50));
     if (state === 0 || state === 0.1) console.log(chalk.inverse(" ".repeat(25 - texts["VIEW_CHANNEL"].length / 2) + texts["VIEW_CHANNEL"] + " ".repeat(25 - texts["VIEW_CHANNEL"].length / 2)));
     else console.log(texts["VIEW_CHANNEL"]);
     if (state === 0.2) console.log(chalk.inverse(" ".repeat(25 - texts["ACCOUNT_INFO"].length / 2) + texts["ACCOUNT_INFO"] + " ".repeat(25 - texts["ACCOUNT_INFO"].length / 2)));
