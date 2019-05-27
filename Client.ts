@@ -61,8 +61,6 @@ fs.readFile("./.config", "utf8", (err, data) => {
         });
     }
 
-    console.log(config);
-
     client.login(config["ACCESS_TOKEN"]).catch(e => {
         const parsed: object = JSON.parse(e);
         console.log(chalk.red("Error while logging in. " + e.message));
@@ -176,7 +174,11 @@ process.stdin.on("keypress", async (str, {name}) => {
             rlState = 6;
         } else if (str === "2") {
             // Change Language
-
+            ConsoleHelper.reset({
+                border: true
+            });
+            console.log("Only English is supported for now.");
+            console.log("Press CTRL + C to go back")
         } else if (str === "3") {
             // Change Color Scheme
         } else if (str === "4") {
