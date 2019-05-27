@@ -80,19 +80,25 @@ client.on("ready", () => {
 process.stdin.on("keypress", async (str, {name}) => {
     if (rlState >= 0 && rlState < 1) {
         if (name === "down") {
-            ConsoleHelper.reset();
+            ConsoleHelper.reset({
+                border: true
+            });
             if (rlState === 0 || rlState === 0.1) showMenu(rlState = 0.2);
             else if (rlState === 0.2) showMenu(rlState = 0.3);
             else if (rlState === 0.3) showMenu(rlState = 0.4);
             else showMenu(rlState = 0.4);
         } else if (name === "up") {
-            ConsoleHelper.reset();
+            ConsoleHelper.reset({
+                border: true
+            });
             if (rlState === 0.2) showMenu(rlState = 0.1);
             else if (rlState === 0.3) showMenu(rlState = 0.2);
             else if (rlState === 0.4) showMenu(rlState = 0.3);
             else showMenu(rlState = 0.1);
         } else if (name === "return") {
-            if (rlState !== 0.4) ConsoleHelper.reset();
+            if (rlState !== 0.4) ConsoleHelper.reset({
+                border: true
+            });
             if (rlState === 0 || rlState === 0.1) {
                 rlState = 1;
                 showChannels(client);
@@ -131,7 +137,9 @@ process.stdin.on("keypress", async (str, {name}) => {
             rlState = 3;
         }
     } else if (rlState === 2) {
-        ConsoleHelper.reset();
+        ConsoleHelper.reset({
+            border: true
+        });
         showMenu(rlState = 0.1);
     } else if (rlState === 3) {
         if (str === "x") {
@@ -139,7 +147,9 @@ process.stdin.on("keypress", async (str, {name}) => {
             showChannel(client.activeChannel, client, 2);
             rlState = 4;
         } else if (str === "c") {
-            ConsoleHelper.reset();
+            ConsoleHelper.reset({
+                border: true
+            });
             rlState = 1;
             clearInterval(client.activeChannel.messageHandler);
             client.activeChannel = null;
