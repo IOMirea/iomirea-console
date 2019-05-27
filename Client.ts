@@ -44,6 +44,10 @@ const rl: readline.Interface = readline.createInterface({
 
 // rlState
 // 0 = Menu Selection
+// 0.1 = Menu - View Channel
+// 0.2 = Menu - Account Information
+// 0.3 = Menu - Settings
+// 0.4 = Menu - Exit
 // 1 = View Channels
 // 2 = Account Information
 // 3 = Channel Browser
@@ -58,30 +62,38 @@ console.log(chalk.yellow("Connecting..."));
 client.on("ready", () => {
     console.log(chalk.green(`Connected! (${client.channels.size} Channels, ${((client.readyAt - client.instanceAt) / 1000).toFixed(2)}s)`));
     console.log(ConsoleHelper.iomirea);
-    showMenu();
+    showMenu(rlState = 0.1);
 });
 
 process.stdin.on("keypress", async (str, {name}) => {
-    if (rlState === 0) {
-        if (str === "1") {
+    if (rlState >= 0 && rlState < 1) {
+        if (name === "down") {
             ConsoleHelper.reset();
-            showChannels(client);
-            rlState = 1;
-        }
-        else if (str === "2") {
+            if (rlState === 0 || rlState === 0.1) showMenu(rlState = 0.2);
+            else if (rlState === 0.2) showMenu(rlState = 0.3);
+            else if (rlState === 0.3) showMenu(rlState = 0.4);
+            else showMenu(rlState = 0.4);
+        } else if (name === "up") {
             ConsoleHelper.reset();
-            showAccount(client);
-            rlState = 2;
-        }
-        else if (str === "3") {
+            if (rlState === 0.2) showMenu(rlState = 0.1);
+            else if (rlState === 0.3) showMenu(rlState = 0.2);
+            else if (rlState === 0.4) showMenu(rlState = 0.3);
+            else showMenu(rlState = 0.1);
+        } else if (name === "return") {
             ConsoleHelper.reset();
-            showSettings(config);
-            rlState = 5;
-        }
-        else if (str === "4") process.exit(0);
-        else {
-            ConsoleHelper.reset();
-            showMenu();
+            if (rlState === 0 || rlState === 0.1) {
+                rlState = 1;
+                showChannels(client);
+            }
+            else if (rlState === 0.2) {
+                rlState = 2;
+                showAccount(client);
+            }
+            else if (rlState === 0.3) {
+                rlState = 5;
+                showSettings(config);
+            }
+            else if (rlState === 0.4) process.exit(0);
         }
     } else if (rlState === 1) {
         const answer = parseInt(str);
@@ -108,8 +120,7 @@ process.stdin.on("keypress", async (str, {name}) => {
         }
     } else if (rlState === 2) {
         ConsoleHelper.reset();
-        showMenu();
-        rlState = 0;
+        showMenu(rlState = 0.1);
     } else if (rlState === 3) {
         if (str === "x") {
             console.clear();
@@ -155,7 +166,7 @@ process.stdin.on("keypress", async (str, {name}) => {
             // Change Color Scheme
         } else if (str === "4") {
             ConsoleHelper.reset();
-            showMenu();
+            showMenu(rlState = 0.1);
             rlState = 0;
         }
     } else if (rlState === 6) {
@@ -185,7 +196,7 @@ rl.on("SIGINT", () => {
     }
     client.removeActiveChannel();
     ConsoleHelper.reset();
-    showMenu();
+    showMenu(rlState = 0.1);
     rlState = 0;
     tempInput = "";
 });
