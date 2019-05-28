@@ -116,28 +116,6 @@ process.stdin.on("keypress", async (str, {name}) => {
             else if (rlState === 0.4) process.exit(0);
         }
     } else if (rlState >= 1 && rlState < 2) {
-        /*const answer = parseInt(str);
-        console.clear();
-        if (isNaN(answer)) {
-            showChannels(client, rlState);
-        }
-        else {
-            const channel: Channel = Array.from(client.channels.values())[answer - 1];
-            if (channel === undefined) return console.log(chalk.red("An error occured!"));
-            await showChannel(channel, client);
-            client.activeChannel = channel;
-            channel.handleMessages(n => {
-                if (channel.messages.length === n.length) return;
-                else {
-                    channel.messages = n;
-                    if (rlState === 3) {
-                        console.clear();
-                        showChannel(client.activeChannel, client, 1);
-                    }
-                }
-            }, 1e3);
-            rlState = 3;
-        }*/
         if (name === "down" || str === "s") {
             if (selector.state >= client.channels.size) return;
             ConsoleHelper.reset();
@@ -147,7 +125,13 @@ process.stdin.on("keypress", async (str, {name}) => {
             ConsoleHelper.reset();
             showChannels(client, --selector.state);
         } else if (name === "return") {
-            const channel: Channel = Array.from(client.channels.values())[selector.state - 1];
+            const channel: Channel = client.activeChannel = Array.from(client.channels.values())[selector.state - 1];
+            channel.handleMessages(msgs => {
+                if (channel.messages.length !== msgs.length) {
+                    channel.messages = msgs;
+                    showChannel(channel, client, 0);
+                }
+            }, 2000);
             rlState = 3;
             showChannel(channel, client, 0);
         }
