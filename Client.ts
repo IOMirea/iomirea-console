@@ -148,7 +148,8 @@ process.stdin.on("keypress", async (str, {name}) => {
             showChannels(client, --selector.state);
         } else if (name === "return") {
             const channel: Channel = Array.from(client.channels.values())[selector.state - 1];
-            showChannel(channel, client, rlState);
+            rlState = 3;
+            showChannel(channel, client, 0);
         }
     } else if (rlState === 2) {
         ConsoleHelper.reset({
