@@ -147,6 +147,8 @@ process.stdin.on("keypress", async (str, {name}) => {
             ConsoleHelper.reset();
             showChannels(client, --selector.state);
         } else if (name === "return") {
+            const channel: Channel = Array.from(client.channels.values())[selector.state - 1];
+            showChannel(channel, client, rlState);
         }
     } else if (rlState === 2) {
         ConsoleHelper.reset({
@@ -226,6 +228,7 @@ process.stdin.on("keypress", async (str, {name}) => {
 });
 
 rl.on("SIGINT", () => {
+    if (rlState >= 0 && rlState < 1) process.exit(0);
     if (rlState === 4) {
         console.clear();
         showChannel(client.activeChannel, client, 1);
