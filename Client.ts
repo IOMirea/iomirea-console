@@ -6,7 +6,8 @@ import { writeFile } from 'fs';
 import Client from './structures/Client';
 import ConsoleHelper from './structures/ConsoleHelperT';
 import Config from './structures/Config';
-import Channel from "./structures/Channel";
+import Channel from './structures/Channel';
+import ConsoleSelector from './structures/ConsoleSelector'
 
 // Helper module imports
 import formatDate from './modules/formatDate';
@@ -20,7 +21,8 @@ import writeConfig from './modules/writeConfig';
 const config: Config = {};
 const client: Client = new Client();
 
-// rlState
+// readline states
+// Floating Point Error might occur if dynamic state
 // -1 = Access Token Input
 // 0 = Menu Selection
 // 0.1 = Menu - View Channel
@@ -28,6 +30,7 @@ const client: Client = new Client();
 // 0.3 = Menu - Settings
 // 0.4 = Menu - Exit
 // 1 = View Channels
+// 1.Z = View Channels (Index Z)
 // 2 = Account Information
 // 3 = Channel Browser
 // 4 = Channel Browser (Send Message)
@@ -36,7 +39,8 @@ const client: Client = new Client();
 // 7 = Settings (Languages)
 let rlState: number = 0;
 let tempInput: string = "";
-let rl: readline.Interface = readline.createInterface({
+let selector: ConsoleSelector = new ConsoleSelector();
+const rl: readline.Interface = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
@@ -97,8 +101,9 @@ process.stdin.on("keypress", async (str, {name}) => {
             });
             else if (rlState === 0.1) ConsoleHelper.reset();
             if (rlState === 0 || rlState === 0.1) {
-                rlState = 1;
-                showChannels(client);
+                showChannels(client, selector.state || 1);
+                selector = new ConsoleSelector(1);
+                rlState = 1.0;
             }
             else if (rlState === 0.2) {
                 rlState = 2;
@@ -110,11 +115,11 @@ process.stdin.on("keypress", async (str, {name}) => {
             }
             else if (rlState === 0.4) process.exit(0);
         }
-    } else if (rlState === 1) {
-        const answer = parseInt(str);
+    } else if (rlState >= 1 && rlState < 2) {
+        /*const answer = parseInt(str);
         console.clear();
         if (isNaN(answer)) {
-            showChannels(client);
+            showChannels(client, rlState);
         }
         else {
             const channel: Channel = Array.from(client.channels.values())[answer - 1];
@@ -132,6 +137,15 @@ process.stdin.on("keypress", async (str, {name}) => {
                 }
             }, 1e3);
             rlState = 3;
+        }*/
+        if (name === "down" || str === "s") {
+            if (selector.state >= client.channels.size) return;
+            ConsoleHelper.reset();
+            showChannels(client, ++selector.state);
+        } else if (name === "up" || str === "w") {
+            if (selector.state <= 1) return;
+            ConsoleHelper.reset();
+            showChannels(client, --selector.state);
         }
     } else if (rlState === 2) {
         ConsoleHelper.reset({
@@ -148,7 +162,7 @@ process.stdin.on("keypress", async (str, {name}) => {
             rlState = 1;
             clearInterval(client.activeChannel.messageHandler);
             client.activeChannel = null;
-            showChannels(client);
+            showChannels(client, selector.state || 1);
         } else if (str === "r") {
             client.activeChannel.fetchMessages(true).then(() => {
                 console.clear();
