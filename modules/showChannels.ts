@@ -16,5 +16,4 @@ export default function(client: Client, state: number) {
         console.log(print(`${i+1}${" ".repeat(8)}${name}${" ".repeat(35 - (name.endsWith("...") ? 27 : name.length))}${users}${" ".repeat(16 - users.length)}${channels[i].id}`, state, i + 1));
     }
     console.log("\n\nPress CTRL + C anytime to get back to the menu");
-    console.log("(" + state + ")")
 }
