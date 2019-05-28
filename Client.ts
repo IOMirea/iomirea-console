@@ -146,6 +146,7 @@ process.stdin.on("keypress", async (str, {name}) => {
             if (selector.state <= 1) return;
             ConsoleHelper.reset();
             showChannels(client, --selector.state);
+        } else if (name === "return") {
         }
     } else if (rlState === 2) {
         ConsoleHelper.reset({
