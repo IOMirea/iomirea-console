@@ -79,13 +79,13 @@ client.on("ready", () => {
 
 process.stdin.on("keypress", async (str, {name}) => {
     if (rlState >= 0 && rlState < 1) {
-        if (name === "down") {
+        if (name === "down" || str === "s") {
             ConsoleHelper.reset();
             if (rlState === 0 || rlState === 0.1) showMenu(rlState = 0.2);
             else if (rlState === 0.2) showMenu(rlState = 0.3);
             else if (rlState === 0.3) showMenu(rlState = 0.4);
             else showMenu(rlState = 0.4);
-        } else if (name === "up") {
+        } else if (name === "up" || str === "w") {
             ConsoleHelper.reset();
             if (rlState === 0.2) showMenu(rlState = 0.1);
             else if (rlState === 0.3) showMenu(rlState = 0.2);
