@@ -67,7 +67,7 @@ fs.readFile("./.config", "utf8", (err, data) => {
 
     client.login(config["ACCESS_TOKEN"]).catch(e => {
         const parsed: object = JSON.parse(e);
-        console.log(chalk.red("Error while logging in. " + e.message));
+        console.log(chalk.red("Error while logging in. " + (e.message || "Perhaps an invalid access token was provided?")));
         process.exit(1);
     });
 });
