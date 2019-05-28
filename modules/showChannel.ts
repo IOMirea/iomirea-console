@@ -30,7 +30,6 @@ export default async function (channel: Channel | string, client: Client, state:
     }
     let spacePad: number = state === 2 ? 3 : 2;
     console.log(("\n").repeat(messages.length > process.stdout.rows - spacePad ? 0 : process.stdout.rows - messages.length - spacePad) + (state === 2 ? texts.controls.back : `${texts.controls.send}\t${texts.controls.channel_browser}\t${texts.controls.reload}`));
-
     if (state === 2) {
         console.log("―".repeat(process.stdout.columns));
         process.stdout.write("> ");
