@@ -101,7 +101,7 @@ process.stdin.on("keypress", async (str, {name}) => {
             });
             else if (rlState === 0.1) ConsoleHelper.reset();
             if (rlState === 0 || rlState === 0.1) {
-                showChannels(client, selector.state || 1);
+                showChannels(client, selector);
                 selector = new ConsoleSelector({
                     state: 1,
                     limit: client.channels.size
@@ -122,11 +122,13 @@ process.stdin.on("keypress", async (str, {name}) => {
         if (name === "down" || str === "s") {
             if (selector.state >= client.channels.size) return;
             ConsoleHelper.reset();
-            showChannels(client, ++selector.state);
+            selector.state++;
+            showChannels(client, selector);
         } else if (name === "up" || str === "w") {
             if (selector.state <= 1) return;
             ConsoleHelper.reset();
-            showChannels(client, --selector.state);
+            selector.state--;
+            showChannels(client, selector);
         } else if (name === "return") {
             const channel: Channel = client.activeChannel = Array.from(client.channels.values())[selector.state - 1];
             channel.handleMessages(msgs => {
@@ -153,7 +155,7 @@ process.stdin.on("keypress", async (str, {name}) => {
             rlState = 1;
             clearInterval(client.activeChannel.messageHandler);
             client.activeChannel = null;
-            showChannels(client, selector.state || 1);
+            showChannels(client, selector);
         } else if (str === "r") {
             client.activeChannel.fetchMessages(true).then(() => {
                 console.clear();
