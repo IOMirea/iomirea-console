@@ -43,6 +43,7 @@ export default class ConsoleSelector {
     log(s: number|string, ci: number) {
         let v: string;
         if (typeof s === "number") v = this.contents[s];
+        else v = s;
 
         if (this.state - 1 === ci) console.log(chalk.inverse(v));
         else console.log(v);
