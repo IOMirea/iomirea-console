@@ -39,7 +39,7 @@ const client: Client = new Client();
 // 7 = Settings (Languages)
 let rlState: number = 0;
 let tempInput: string = "";
-let selector: ConsoleSelector = new ConsoleSelector();
+let selector: ConsoleSelector = new ConsoleSelector({ });
 const rl: readline.Interface = readline.createInterface({
     input: process.stdin,
     output: process.stdout
@@ -102,7 +102,10 @@ process.stdin.on("keypress", async (str, {name}) => {
             else if (rlState === 0.1) ConsoleHelper.reset();
             if (rlState === 0 || rlState === 0.1) {
                 showChannels(client, selector.state || 1);
-                selector = new ConsoleSelector(1);
+                selector = new ConsoleSelector({
+                    state: 1,
+                    limit: client.channels.size
+                });
                 rlState = 1.0;
             }
             else if (rlState === 0.2) {
