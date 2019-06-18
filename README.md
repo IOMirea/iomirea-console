@@ -1,5 +1,5 @@
 # iomirea-client
-This repository contains the source code for a console client that interacts with [iomirea](https://github.com/Fogapod/IOMirea-server/).
+This repository contains the source code for a console client that interacts with [iomirea](https://github.com/iomirea).
 
 ### Features
 - View Account Information (E-Mail, Username, User ID)
