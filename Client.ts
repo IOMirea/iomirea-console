@@ -2,6 +2,7 @@
 import * as readline from 'readline';
 import * as fs from 'fs';
 import chalk from "chalk";
+import * as Constants from './structures/Constants'
 import {
 	writeFile
 } from 'fs';
@@ -10,6 +11,7 @@ import ConsoleHelper from './structures/ConsoleHelper';
 import Config from './structures/Config';
 import Channel from './structures/Channel';
 import ConsoleSelector from './structures/ConsoleSelector'
+
 // Helper module imports
 import formatDate from './modules/formatDate';
 import showAccount from './modules/showAccount';
@@ -18,6 +20,7 @@ import showChannels from './modules/showChannels';
 import showMenu from './modules/showMenu';
 import showSettings from './modules/showSettings';
 import writeConfig from './modules/writeConfig';
+import {SettingsEntries} from "./structures/Constants";
 const config: Config = {};
 const client: Client = new Client();
 // readline states
@@ -119,7 +122,11 @@ process.stdin.on("keypress", async (str, {
 				showAccount(client);
 			} else if (rlState === 0.3) {
 				rlState = 5;
-				showSettings(config);
+				showSettings(config, selector);
+				selector = new ConsoleSelector({
+					state: 1,
+					limit: Constants.SettingsEntries.length
+				})
 			} else if (rlState === 0.4) process.exit(0);
 		}
 	} else if (rlState >= 1 && rlState < 2) {
@@ -184,31 +191,50 @@ process.stdin.on("keypress", async (str, {
 				break;
 		}
 	} else if (rlState === 5) { //TODO
-		if (str === "1") {
-			// Change Access Token
-			process.stdout.write("\n" + chalk.yellow("New Access Token: "));
-			rlState = 6;
-		} else if (str === "2") {
-			// Change Language
-			ConsoleHelper.reset({
-				border: true
-			});
-			console.log("Only English is supported for now.");
-			console.log("Press CTRL + C to go back")
-		} else if (str === "3") {
-			// Change Color Scheme
-		} else if (str === "4") {
-			ConsoleHelper.reset();
-			showMenu(rlState = 0.1);
-			rlState = 0;
-		}
+
+        if (name === "down" || str === "s") {
+            if (selector.state >= SettingsEntries.length) return;
+            ConsoleHelper.reset();
+            selector.state++;
+            showSettings(config, selector);
+        } else if (name === "up" || str === "w") {
+            if (selector.state <= 1) return;
+            ConsoleHelper.reset();
+            selector.state--;
+            showSettings(config, selector);
+        } else if (name === "return") {
+        	switch (selector.state) {
+				case 1:
+                    process.stdout.write("\n" + chalk.yellow("New Access Token: "));
+                    rlState = 6;
+                    break;
+
+				case 2:
+                    ConsoleHelper.reset({
+                        border: true
+                    });
+                    console.log("Only English is supported for now.");
+                    console.log("Press CTRL + C to go back");
+					break;
+
+				case 3:
+					console.log(chalk.yellow("Changing Color Scheme is not supported in this version"));
+					break;
+
+				case 4:
+                    ConsoleHelper.reset();
+                    showMenu(rlState = 0.1);
+                    rlState = 0;
+                    break;
+			}
+        }
 	} else if (rlState === 6) {
 		if (name === "return") {
 			client.accessToken = tempInput;
 			config.ACCESS_TOKEN = tempInput;
 			writeConfig(config).then(() => {
 				ConsoleHelper.reset();
-				showSettings(config);
+				showSettings(config, selector);
 				console.log(chalk.green("Successfully updated Access Token!"));
 			}).catch(err => {
 				console.log(chalk.red(err));
