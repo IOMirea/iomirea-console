@@ -1,7 +1,6 @@
 import Client from '../structures/Client';
 import Channel from '../structures/Channel';
 import ConsoleSelector from '../structures/ConsoleSelector';
-import chalk from 'chalk';
 
 export default function(client: Client, cselector: ConsoleSelector) {
     if (cselector.state === undefined) cselector.state = 1;
