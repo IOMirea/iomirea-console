@@ -77,11 +77,11 @@ fs.readFile("./.config", "utf8", (err, data) => {
 		});
 	}
 	client.login(config.ACCESS_TOKEN).catch(e => {
-		const parsed: object = JSON.parse(e);
+		const parsed: { message: string } = JSON.parse(e);
 		if (config.ACCESS_TOKEN === "token")
 			console.log(chalk.red("Error while logging in. Please replace `token` with your access token in the .config file"));
 		else
-			console.log(chalk.red("Error while logging in. " + (e.message || "Perhaps an invalid access token was provided?")));
+			console.log(chalk.red("Error while logging in. " + (parsed.message || "Perhaps an invalid access token was provided?")));
 		process.exit(1);
 	});
 });
