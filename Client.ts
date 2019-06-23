@@ -6,7 +6,7 @@ import {
 	writeFile
 } from 'fs';
 import Client from './structures/Client';
-import ConsoleHelper from './structures/ConsoleHelperT';
+import ConsoleHelper from './structures/ConsoleHelper';
 import Config from './structures/Config';
 import Channel from './structures/Channel';
 import ConsoleSelector from './structures/ConsoleSelector'
