@@ -76,9 +76,12 @@ fs.readFile("./.config", "utf8", (err, data) => {
 			});
 		});
 	}
-	client.login(config["ACCESS_TOKEN"]).catch(e => {
+	client.login(config.ACCESS_TOKEN).catch(e => {
 		const parsed: object = JSON.parse(e);
-		console.log(chalk.red("Error while logging in. " + (e.message || "Perhaps an invalid access token was provided?")));
+		if (config.ACCESS_TOKEN === "token")
+			console.log(chalk.red("Error while logging in. Please replace `token` with your access token in the .config file"));
+		else
+			console.log(chalk.red("Error while logging in. " + (e.message || "Perhaps an invalid access token was provided?")));
 		process.exit(1);
 	});
 });
