@@ -1,6 +1,10 @@
-export default function(config: object) {
-    console.log("1)\tChange Access Token");
-    console.log("2)\tChange Language");
-    console.log("3)\tChange Color Scheme");
-    console.log("4)\tBack");
+import ConsoleSelector from '../structures/ConsoleSelector';
+import { SettingsEntries } from "../structures/Constants";
+
+export default function(config: object, cselector: ConsoleSelector) {
+    if (cselector.state === undefined) cselector.state = 1;
+
+    for (let i: number = 0; i < SettingsEntries.length; ++i) {
+        cselector.log(i + ")" + " ".repeat(8) + SettingsEntries[i], i);
+    }
 }
