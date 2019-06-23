@@ -114,22 +114,22 @@ process.stdin.on("keypress", async (str, {
 			});
 			else if (rlState === 0.1) ConsoleHelper.reset();
 			if (rlState === 0 || rlState === 0.1) {
+                selector = new ConsoleSelector({
+                    state: 1,
+                    limit: client.channels.size
+                });
 				showChannels(client, selector);
-				selector = new ConsoleSelector({
-					state: 1,
-					limit: client.channels.size
-				});
 				rlState = 1.0;
 			} else if (rlState === 0.2) {
 				rlState = 2;
 				showAccount(client);
 			} else if (rlState === 0.3) {
 				rlState = 5;
+                selector = new ConsoleSelector({
+                    state: 1,
+                    limit: Constants.SettingsEntries.length
+                });
 				showSettings(config, selector);
-				selector = new ConsoleSelector({
-					state: 1,
-					limit: Constants.SettingsEntries.length
-				})
 			} else if (rlState === 0.4) process.exit(0);
 		}
 	} else if (rlState >= 1 && rlState < 2) {
