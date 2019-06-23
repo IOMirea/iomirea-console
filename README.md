@@ -31,7 +31,8 @@ npm install typescript -g
 ```
 
 4. Transpile the source code into executable JavaScript code
-> If this errors, make sure 
+> If this tells you that `tsc` is not a recognized internal or external command, make sure `tsc` is set in the PATH environment variable (should not happen on Linux) <br/>
+> Alternatively, run the transpile script yourself with the path to `tsc`
 ```ssh
 npm run transpile
 ```
