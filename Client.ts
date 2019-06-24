@@ -124,7 +124,7 @@ process.stdin.on("keypress", async (str, {
 				rlState = Constants.rlStates.VIEW_CHANNELS;
 			} else if (rlState === Constants.rlStates.MENU_ACCOUNT_INFO) {
 				rlState = Constants.rlStates.ACCOUNT_INFO;
-				showAccount(client);
+				showAccount.call(client);
 			} else if (rlState === Constants.rlStates.MENU_SETTINGS) {
 				rlState = Constants.rlStates.SETTINGS;
                 selector = new ConsoleSelector({
