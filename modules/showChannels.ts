@@ -2,9 +2,9 @@ import Client from '../structures/Client';
 import Channel from '../structures/Channel';
 import ConsoleSelector from '../structures/ConsoleSelector';
 
-export default function(client: Client, cselector: ConsoleSelector) {
+export default function(cselector: ConsoleSelector) {
     if (cselector.state === undefined) cselector.state = 1;
-    const channels: Array<Channel> = Array.from(client.channels.values());
+    const channels: Array<Channel> = Array.from(this.channels.values());
     console.log("#\tChannel Name\t\t\tUsers\t\tID");
     console.log("―".repeat(process.stdout.columns));
     for(let i: number = 0;i < channels.length; ++i) {
