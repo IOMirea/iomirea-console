@@ -92,56 +92,56 @@ console.log(chalk.yellow("Connecting..."));
 client.on("ready", () => {
 	console.log(chalk.green(`Connected! (${client.channels.size} Channels, ${((client.readyAt - client.instanceAt) / 1000).toFixed(2)}s)`));
 	console.log(ConsoleHelper.iomirea);
-	showMenu(rlState = 0.1);
+	showMenu(rlState = Constants.rlStates.MENU_VIEW_CHANNEL);
 });
 process.stdin.on("keypress", async (str, {
 	name
 }) => {
-	if (rlState >= 0 && rlState < 1) {
+	if (rlState >= Constants.rlStates.MENU_SELECTION && rlState < Constants.rlStates.VIEW_CHANNELS) {
 		if (name === "down" || str === "s") {
 			ConsoleHelper.reset();
-			if (rlState === 0 || rlState === 0.1) showMenu(rlState = 0.2);
-			else if (rlState === 0.2) showMenu(rlState = 0.3);
-			else if (rlState === 0.3) showMenu(rlState = 0.4);
-			else showMenu(rlState = 0.4);
+			if (rlState === Constants.rlStates.MENU_SELECTION || rlState === Constants.rlStates.MENU_VIEW_CHANNEL) showMenu(rlState = Constants.rlStates.MENU_ACCOUNT_INFO);
+			else if (rlState === Constants.rlStates.MENU_ACCOUNT_INFO) showMenu(rlState = Constants.rlStates.MENU_SETTINGS);
+			else if (rlState === Constants.rlStates.MENU_SETTINGS) showMenu(rlState = Constants.rlStates.MENU_EXIT);
+			else showMenu(rlState = Constants.rlStates.MENU_EXIT);
 		} else if (name === "up" || str === "w") {
 			ConsoleHelper.reset();
-			if (rlState === 0.2) showMenu(rlState = 0.1);
-			else if (rlState === 0.3) showMenu(rlState = 0.2);
-			else if (rlState === 0.4) showMenu(rlState = 0.3);
-			else showMenu(rlState = 0.1);
+			if (rlState === Constants.rlStates.MENU_ACCOUNT_INFO) showMenu(rlState = Constants.rlStates.MENU_VIEW_CHANNEL);
+			else if (rlState === Constants.rlStates.MENU_SETTINGS) showMenu(rlState = Constants.rlStates.MENU_ACCOUNT_INFO);
+			else if (rlState === Constants.rlStates.MENU_EXIT) showMenu(rlState = Constants.rlStates.MENU_SETTINGS);
+			else showMenu(rlState = Constants.rlStates.MENU_VIEW_CHANNEL);
 		} else if (name === "return") {
-			if (rlState !== 0.4 && rlState !== 0.1) ConsoleHelper.reset({
+			if (rlState !== Constants.rlStates.MENU_EXIT && rlState !== Constants.rlStates.MENU_VIEW_CHANNEL) ConsoleHelper.reset({
 				border: true
 			});
-			else if (rlState === 0.1) ConsoleHelper.reset();
-			if (rlState === 0 || rlState === 0.1) {
+			else if (rlState === Constants.rlStates.MENU_VIEW_CHANNEL) ConsoleHelper.reset();
+			if (rlState === Constants.rlStates.MENU_SELECTION || rlState === Constants.rlStates.MENU_VIEW_CHANNEL) {
                 selector = new ConsoleSelector({
                     state: 1,
                     limit: client.channels.size
                 });
 				showChannels(client, selector);
-				rlState = 1.0;
-			} else if (rlState === 0.2) {
-				rlState = 2;
+				rlState = Constants.rlStates.VIEW_CHANNELS;
+			} else if (rlState === Constants.rlStates.MENU_ACCOUNT_INFO) {
+				rlState = Constants.rlStates.ACCOUNT_INFO;
 				showAccount(client);
-			} else if (rlState === 0.3) {
-				rlState = 5;
+			} else if (rlState === Constants.rlStates.MENU_SETTINGS) {
+				rlState = Constants.rlStates.SETTINGS;
                 selector = new ConsoleSelector({
                     state: 1,
                     limit: Constants.SettingsEntries.length
                 });
 				showSettings(config, selector);
-			} else if (rlState === 0.4) process.exit(0);
+			} else if (rlState === Constants.rlStates.MENU_EXIT) process.exit(0);
 		}
-	} else if (rlState >= 1 && rlState < 2) {
+	} else if (rlState >= Constants.rlStates.VIEW_CHANNELS && rlState < Constants.rlStates.ACCOUNT_INFO) {
 		if (name === "down" || str === "s") {
 			if (selector.state >= client.channels.size) return;
 			ConsoleHelper.reset();
 			selector.state++;
 			showChannels(client, selector);
 		} else if (name === "up" || str === "w") {
-			if (selector.state <= 1) return;
+			if (selector.state <= Constants.rlStates.VIEW_CHANNELS) return;
 			ConsoleHelper.reset();
 			selector.state--;
 			showChannels(client, selector);
@@ -153,29 +153,29 @@ process.stdin.on("keypress", async (str, {
 					showChannel(channel, client, 0);
 				}
 			}, 2000);
-			rlState = 3;
+			rlState = Constants.rlStates.CHANNEL_BROWSER;
 			showChannel(channel, client, 0);
 		} else if (str === "c") {
 
 		    // TODO: Create Channel stuff
-			rlState = 8;
+			rlState = Constants.rlStates.CREATE_CHANNEL;
 			ConsoleHelper.reset();
             createChannel.call(client, rl);
 
         }
-	} else if (rlState === 2) {
+	} else if (rlState === Constants.rlStates.ACCOUNT_INFO) {
 		ConsoleHelper.reset({
 			border: true
 		});
-		showMenu(rlState = 0.1);
-	} else if (rlState === 3) {
+		showMenu(rlState = Constants.rlStates.MENU_VIEW_CHANNEL);
+	} else if (rlState === Constants.rlStates.CHANNEL_BROWSER) {
 		if (str === "x") {
 			console.clear();
 			showChannel(client.activeChannel, client, 2);
-			rlState = 4;
+			rlState = Constants.rlStates.CHANNEL_BROWSER_SEND_MESSAGE;
 		} else if (str === "c") {
 			ConsoleHelper.reset();
-			rlState = 1;
+			rlState = Constants.rlStates.VIEW_CHANNELS;
 			clearInterval(client.activeChannel.messageHandler);
 			client.activeChannel = null;
 			showChannels(client, selector);
@@ -185,7 +185,7 @@ process.stdin.on("keypress", async (str, {
 				showChannel(client.activeChannel, client, 1);
 			});
 		}
-	} else if (rlState === 4) {
+	} else if (rlState === Constants.rlStates.CHANNEL_BROWSER_SEND_MESSAGE) {
 		switch (name) {
 			case "backspace":
 				client.activeChannel.inputText = client.activeChannel.inputText.slice(0, -1);
@@ -195,14 +195,14 @@ process.stdin.on("keypress", async (str, {
 					client.activeChannel.inputText = "";
 					console.clear();
 					showChannel(client.activeChannel, client, 1);
-					rlState = 3;
+					rlState = Constants.rlStates.CHANNEL_BROWSER;
 				});
 				break;
 			default:
 				client.activeChannel.inputText += str;
 				break;
 		}
-	} else if (rlState === 5) {
+	} else if (rlState === Constants.rlStates.SETTINGS) {
 
         if (name === "down" || str === "s") {
             if (selector.state >= SettingsEntries.length) return;
@@ -218,7 +218,7 @@ process.stdin.on("keypress", async (str, {
         	switch (selector.state) {
 				case 1:
                     process.stdout.write("\n" + chalk.yellow("New Access Token: "));
-                    rlState = 6;
+                    rlState = Constants.rlStates.SETTINGS_ACCESS_TOKEN;
                     break;
 
 				case 2:
@@ -235,12 +235,12 @@ process.stdin.on("keypress", async (str, {
 
 				case 4:
                     ConsoleHelper.reset();
-                    showMenu(rlState = 0.1);
-                    rlState = 0;
+                    showMenu(rlState = Constants.rlStates.MENU_VIEW_CHANNEL);
+                    rlState = Constants.rlStates.MENU_SELECTION;
                     break;
 			}
         }
-	} else if (rlState === 6) {
+	} else if (rlState === Constants.rlStates.SETTINGS_ACCESS_TOKEN) {
 		if (name === "return") {
 			client.accessToken = tempInput;
 			config.ACCESS_TOKEN = tempInput;
@@ -252,23 +252,23 @@ process.stdin.on("keypress", async (str, {
 				console.log(chalk.red(err));
 			});
 			tempInput = "";
-			rlState = 5;
+			rlState = Constants.rlStates.SETTINGS;
 			return;
 		} else if (name === "backspace") tempInput = tempInput.slice(0, -1);
 		tempInput += str;
 	}
 });
 rl.on("SIGINT", () => {
-	if (rlState >= 0 && rlState < 1) process.exit(0);
-	if (rlState === 4) {
+	if (rlState >= Constants.rlStates.MENU_SELECTION && rlState < Constants.rlStates.VIEW_CHANNELS) process.exit(0);
+	if (rlState === Constants.rlStates.CHANNEL_BROWSER_SEND_MESSAGE) {
 		console.clear();
 		showChannel(client.activeChannel, client, 1);
-		rlState = 3;
+		rlState = Constants.rlStates.CHANNEL_BROWSER;
 		return;
 	}
 	client.removeActiveChannel();
 	ConsoleHelper.reset();
-	showMenu(rlState = 0.1);
-	rlState = 0;
+	showMenu(rlState = Constants.rlStates.MENU_VIEW_CHANNEL);
+	rlState = Constants.rlStates.MENU_SELECTION;
 	tempInput = "";
 });
