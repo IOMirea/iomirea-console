@@ -20,6 +20,7 @@ import showChannels from './modules/showChannels';
 import showMenu from './modules/showMenu';
 import showSettings from './modules/showSettings';
 import writeConfig from './modules/writeConfig';
+import createChannel from './modules/createChannel';
 import {SettingsEntries} from "./structures/Constants";
 const config: Config = {};
 const client: Client = new Client();
@@ -153,7 +154,11 @@ process.stdin.on("keypress", async (str, {
 			}, 2000);
 			rlState = 3;
 			showChannel(channel, client, 0);
-		}
+		} else if (str === "c") {
+
+		    // TODO: Create Channel stuff
+
+        }
 	} else if (rlState === 2) {
 		ConsoleHelper.reset({
 			border: true
@@ -193,7 +198,7 @@ process.stdin.on("keypress", async (str, {
 				client.activeChannel.inputText += str;
 				break;
 		}
-	} else if (rlState === 5) { //TODO
+	} else if (rlState === 5) {
 
         if (name === "down" || str === "s") {
             if (selector.state >= SettingsEntries.length) return;
