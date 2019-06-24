@@ -12,5 +12,5 @@ export default function(client: Client, cselector: ConsoleSelector) {
         const users = channels[i].user_ids.length + " Users";
         cselector.log(`${i+1}${" ".repeat(8)}${name}${" ".repeat(35 - (name.endsWith("...") ? 27 : name.length))}${users}${" ".repeat(16 - users.length)}${channels[i].id}`, i);
     }
-    console.log("\n\nPress CTRL + C anytime to get back to the menu");
+    console.log("\n\n[CTRL + C] Back to menu | [C] Create Channel");
 }
