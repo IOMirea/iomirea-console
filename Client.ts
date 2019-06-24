@@ -40,6 +40,7 @@ const client: Client = new Client();
 // 5 = Settings
 // 6 = Settings (Change Access Token)
 // 7 = Settings (Languages)
+// 8 = Create Channel
 let rlState: number = 0;
 let tempInput: string = "";
 let selector: ConsoleSelector = new ConsoleSelector({});
@@ -157,6 +158,9 @@ process.stdin.on("keypress", async (str, {
 		} else if (str === "c") {
 
 		    // TODO: Create Channel stuff
+			rlState = 8;
+			ConsoleHelper.reset();
+            createChannel.call(client, rl);
 
         }
 	} else if (rlState === 2) {
