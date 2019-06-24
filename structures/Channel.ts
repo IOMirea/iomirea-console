@@ -134,10 +134,12 @@ export default class Channel {
     static create(client: Client, data: ChannelData) {
         return new Promise((resolve, reject) => {
             const {name, user_ids} = data;
-            client.request("/channels/", false, "POST", {
+            client.request("/channels/", true, "POST", {
                 name,
                 recipients: user_ids
-            }).then(resolve).catch(reject);
+            }).then(c => {
+                resolve(new Channel(c.id, c.name, c.owner_id, c.user_ids, c.pinned_ids, client));
+            }).catch(reject);
         });
     }
 }
