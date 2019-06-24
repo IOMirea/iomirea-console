@@ -3,6 +3,11 @@ import Client from './Client';
 import Timeout = NodeJS.Timeout;
 import Message from '../structures/Message'
 
+interface ChannelData {
+    name: string;
+    user_ids: Array<string>;
+}
+
 export default class Channel {
     private _id: string;
     private _name: string;
@@ -125,4 +130,18 @@ export default class Channel {
             }).catch(reject).then(r => r.text()).then(resolve);
         });
     };
+
+    static create(client: Client, data: ChannelData) {
+        return new Promise((resolve, reject) => {
+            const {name, user_ids} = data;
+            client.request("channels", true, "POST", {
+                name,
+                recipients: user_ids.filter(v => v !== "")
+            }, {
+                "Content-type": "application/json"
+            }).then(c => {
+                resolve(c);
+            }).catch(reject);
+        });
+    }
 }

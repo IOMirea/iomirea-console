@@ -110,12 +110,14 @@ export default class Client extends EventEmitter {
         });
     }
 
-    request(endpoint: string, json: boolean = false, method: string = "GET"): Promise<any> {
+    request(endpoint: string, json: boolean = false, method: string = "GET", body?: any, headers: any = {}): Promise<any> {
         return new Promise((resolve, reject) => {
             fetch(/^https?:\/\//.test(endpoint) ? endpoint : Client.API_HOST + endpoint, {
                 headers: {
-                    "Authorization": this.accessToken
+                    "Authorization": this.accessToken,
+                     ...headers
                 },
+                body: body ? JSON.stringify(body) : undefined,
                 method
             }).then(r => {
                 if (json === true) return r.json();

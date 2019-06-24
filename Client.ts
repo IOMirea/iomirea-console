@@ -20,6 +20,7 @@ import showChannels from './modules/showChannels';
 import showMenu from './modules/showMenu';
 import showSettings from './modules/showSettings';
 import writeConfig from './modules/writeConfig';
+import createChannel from './modules/createChannel';
 import {SettingsEntries} from "./structures/Constants";
 const config: Config = {};
 const client: Client = new Client();
@@ -39,6 +40,7 @@ const client: Client = new Client();
 // 5 = Settings
 // 6 = Settings (Change Access Token)
 // 7 = Settings (Languages)
+// 8 = Create Channel
 let rlState: number = 0;
 let tempInput: string = "";
 let selector: ConsoleSelector = new ConsoleSelector({});
@@ -153,7 +155,14 @@ process.stdin.on("keypress", async (str, {
 			}, 2000);
 			rlState = 3;
 			showChannel(channel, client, 0);
-		}
+		} else if (str === "c") {
+
+		    // TODO: Create Channel stuff
+			rlState = 8;
+			ConsoleHelper.reset();
+            createChannel.call(client, rl);
+
+        }
 	} else if (rlState === 2) {
 		ConsoleHelper.reset({
 			border: true
@@ -193,7 +202,7 @@ process.stdin.on("keypress", async (str, {
 				client.activeChannel.inputText += str;
 				break;
 		}
-	} else if (rlState === 5) { //TODO
+	} else if (rlState === 5) {
 
         if (name === "down" || str === "s") {
             if (selector.state >= SettingsEntries.length) return;
