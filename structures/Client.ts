@@ -112,7 +112,7 @@ export default class Client extends EventEmitter {
 
     request(endpoint: string, json: boolean = false, method: string = "GET", body?: any, headers: any = {}): Promise<any> {
         return new Promise((resolve, reject) => {
-            fetch(/^https?:\/\//.test(endpoint) ? endpoint : Client.API_HOST + endpoint.replace(/^\//, ""), {
+            fetch(/^https?:\/\//.test(endpoint) ? endpoint : Client.API_HOST + endpoint, {
                 headers: {
                     "Authorization": this.accessToken,
                      ...headers
