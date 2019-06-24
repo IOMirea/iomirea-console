@@ -134,9 +134,9 @@ export default class Channel {
     static create(client: Client, data: ChannelData) {
         return new Promise((resolve, reject) => {
             const {name, user_ids} = data;
-            client.request("channels/", true, "POST", {
+            client.request("channels", true, "POST", {
                 name,
-                recipients: user_ids
+                recipients: user_ids.filter(v => v !== "")
             }, {
                 "Content-type": "application/json"
             }).then(c => {
