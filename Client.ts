@@ -120,7 +120,7 @@ process.stdin.on("keypress", async (str, {
                     state: 1,
                     limit: client.channels.size
                 });
-				showChannels(client, selector);
+				showChannels.call(client, selector);
 				rlState = Constants.rlStates.VIEW_CHANNELS;
 			} else if (rlState === Constants.rlStates.MENU_ACCOUNT_INFO) {
 				rlState = Constants.rlStates.ACCOUNT_INFO;
@@ -139,12 +139,12 @@ process.stdin.on("keypress", async (str, {
 			if (selector.state >= client.channels.size) return;
 			ConsoleHelper.reset();
 			selector.state++;
-			showChannels(client, selector);
+			showChannels.call(client, selector);
 		} else if (name === "up" || str === "w") {
 			if (selector.state <= Constants.rlStates.VIEW_CHANNELS) return;
 			ConsoleHelper.reset();
 			selector.state--;
-			showChannels(client, selector);
+			showChannels.call(client, selector);
 		} else if (name === "return") {
 			const channel: Channel = client.activeChannel = Array.from(client.channels.values())[selector.state - 1];
 			channel.handleMessages(msgs => {
@@ -178,7 +178,7 @@ process.stdin.on("keypress", async (str, {
 			rlState = Constants.rlStates.VIEW_CHANNELS;
 			clearInterval(client.activeChannel.messageHandler);
 			client.activeChannel = null;
-			showChannels(client, selector);
+			showChannels.call(client, selector);
 		} else if (str === "r") {
 			client.activeChannel.fetchMessages(true).then(() => {
 				console.clear();
