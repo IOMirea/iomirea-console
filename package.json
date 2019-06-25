@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "iomirea": "node Client.js",
-    "transpile": "tsc Client.ts -t es5"
+    "transpile": "tsc Client.ts -t es5 && echo successfully transpiled to executable javascript code"
   },
   "author": "y21",
   "license": "ISC",
