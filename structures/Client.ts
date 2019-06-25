@@ -80,6 +80,13 @@ export default class Client extends EventEmitter {
     }
 
     // Methods
+
+    /**
+     * Connect to IOMirea server
+     *
+     * @param {string} token The access token
+     * @returns {Promise<Client>}
+     */
     login(token: string): Promise<Client> {
         return new Promise((resolve, reject) => {
             fetch(Client.API_HOST + "users/@me/channels", {
@@ -110,6 +117,16 @@ export default class Client extends EventEmitter {
         });
     }
 
+    /**
+     * Sends a request to a specific endpoint
+     *
+     * @param {string} endpoint The requested endpoint
+     * @param {boolean?} json Convert response to JSON automatically, false by default
+     * @param {string?} method HTTP Method, GET by default
+     * @param {*} body Request body
+     * @param {*} headers Request headers
+     * @returns {Promise<*>}
+     */
     request(endpoint: string, json: boolean = false, method: string = "GET", body?: any, headers: any = {}): Promise<any> {
         return new Promise((resolve, reject) => {
             fetch(/^https?:\/\//.test(endpoint) ? endpoint : Client.API_HOST + endpoint, {
@@ -127,17 +144,36 @@ export default class Client extends EventEmitter {
         });
     }
 
+    /**
+     * Fetches a user by ID
+     *
+     * @param {string} user The requested user (ID)
+     * @returns {Promise<*>}
+     */
     fetchUser(user: string): Promise<any> {
         return new Promise((resolve, reject) => {
             this.request(`users/${user}`, true).then(resolve).catch(reject);
         });
     }
 
+    /**
+     * Removes the current active channel
+     *
+     * @returns {undefined}
+     */
     removeActiveChannel(): void {
         if (this.activeChannel instanceof Channel) clearInterval(this.activeChannel.messageHandler);
         this.activeChannel = null;
     }
 
+
+    /**
+     * Converts a snowflake into a timestamp
+     *
+     * @static
+     * @param {string} snowflake The snowflake to convert
+     * @returns {number}
+     */
     static getTime(snowflake: string) {
         // @ts-ignore
         return parseInt(BigInt(1546300800) + (BigInt(snowflake) >> BigInt(22)) / BigInt(1000)) * 1000;
