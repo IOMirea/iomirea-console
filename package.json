@@ -4,9 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "iomirea": "node Client.js",
-    "setup": "node setup.js",
     "transpile": "tsc Client.ts -t es5"
   },
   "author": "y21",
