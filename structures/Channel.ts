@@ -153,6 +153,7 @@ export default class Channel {
     /**
      * Creates a channel
      *
+     * @static
      * @param {Client} client The client instance
      * @param {ChannelData} data Channel data for the channel that should be created
      * @returns {Promise<*>}
