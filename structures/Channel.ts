@@ -20,12 +20,12 @@ export default class Channel {
     private _inputText: string = "";
 
     constructor(id: string, name: string, owner_id: string, user_ids: Array<string>, pinned_ids: Array<string>, client: Client) {
-        this.id = id;
-        this.name = name;
-        this.owner_id = owner_id;
-        this.user_ids = user_ids;
-        this.pinned_ids = pinned_ids;
-        this.client = client;
+        this._id = id;
+        this._name = name;
+        this._owner_id = owner_id;
+        this._user_ids = user_ids;
+        this._pinned_ids = pinned_ids;
+        this._client = client;
     }
 
     // Getters/Setters
