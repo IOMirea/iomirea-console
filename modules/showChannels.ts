@@ -2,6 +2,12 @@ import Client from '../structures/Client';
 import Channel from '../structures/Channel';
 import ConsoleSelector from '../structures/ConsoleSelector';
 
+/**
+ * Shows all channels the current user has access to
+ *
+ * @param {ConsoleSelector} cselector The ConsoleSelector instance
+ * @returns {undefined}
+ */
 export default function(cselector: ConsoleSelector) {
     if (cselector.state === undefined) cselector.state = 1;
     const channels: Array<Channel> = Array.from(this.channels.values());
