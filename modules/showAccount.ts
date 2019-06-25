@@ -1,3 +1,8 @@
+/**
+ * Shows information about the current user
+ *
+ * @returns {undefined}
+ */
 export default function(): void {
     console.log(`ID\t\t${this.user.id}`);
     console.log(`Username\t${this.user.name}`);
