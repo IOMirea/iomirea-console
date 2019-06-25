@@ -18,6 +18,14 @@ const texts: any = {
     }
 };
 
+/**
+ * Shows messages in a channel / hud
+ *
+ * @param {Channel|string} channel The channel object
+ * @param {Client} client The client instance
+ * @param {number} state readline state
+ * @returns {Promise<undefined>}
+ */
 export default async function (channel: Channel | string, client: Client, state: number = 0) {
     if (typeof channel === "string") channel = client.channels.get(channel);
     const messages: Array<Message> = state === 0 ? await channel.fetchMessages(true) : channel.messages;
