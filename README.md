@@ -1,4 +1,6 @@
 # iomirea-client
+[![Build Status](https://travis-ci.org/y21/iomirea-console.svg?branch=master)](https://travis-ci.org/y21/iomirea-console)
+
 This repository contains the source code for a console client that interacts with [iomirea](https://github.com/iomirea).
 
 ### Features
