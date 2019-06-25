@@ -1,6 +1,13 @@
 import ConsoleSelector from '../structures/ConsoleSelector';
 import { SettingsEntries } from "../structures/Constants";
 
+/**
+ * Shows the settings page
+ *
+ * @param {object} config The config object
+ * @param {ConsoleSelector} cselector The console selector instance
+ * @returns {undefined}
+ */
 export default function(config: object, cselector: ConsoleSelector) {
     if (cselector.state === undefined) cselector.state = 1;
 
