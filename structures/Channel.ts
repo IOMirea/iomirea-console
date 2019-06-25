@@ -101,6 +101,12 @@ export default class Channel {
         this._inputText = value;
     }
 
+    /**
+     * Fetches messages in this channel
+     *
+     * @param {boolean} c Cache messages
+     * @returns {Promise<Array<Message>>}
+     */
     fetchMessages(c: boolean): Promise<Array<Message>> {
         return new Promise((resolve, reject) => {
             this.client.request(`channels/${this.id}/messages`, true).then(v => {
@@ -110,6 +116,13 @@ export default class Channel {
         });
     }
 
+    /**
+     * Fetches messages in this channel
+     *
+     * @param {function} c Callback function
+     * @param {number} m Timeout
+     * @returns {undefined}
+     */
     handleMessages(c: (msgs: Array<Message>) => any, m: number) {
         this.messageHandler = setInterval(() => {
             this.fetchMessages(false).then(v => {
@@ -118,6 +131,12 @@ export default class Channel {
         }, m);
     }
 
+    /**
+     * Send a message to this channel
+     *
+     * @param {string?} content Message content, uses inputText cache by default
+     * @returns {Promise<string>}
+     */
     send(content: string = this.inputText) : Promise<string> {
         return new Promise((resolve, reject) => {
             fetch(`${Client.API_HOST}channels/${this.id}/messages`, {
@@ -131,7 +150,14 @@ export default class Channel {
         });
     };
 
-    static create(client: Client, data: ChannelData) {
+    /**
+     * Creates a channel
+     *
+     * @param {Client} client The client instance
+     * @param {ChannelData} data Channel data for the channel that should be created
+     * @returns {Promise<*>}
+     */
+    static create(client: Client, data: ChannelData): Promise<any> {
         return new Promise((resolve, reject) => {
             const {name, user_ids} = data;
             client.request("channels", true, "POST", {
