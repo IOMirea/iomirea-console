@@ -2,6 +2,12 @@ import { Interface } from "readline";
 import Channel from '../structures/Channel';
 import chalk from "chalk";
 
+/**
+ * Creates a channel given by a name and recipients
+ *
+ * @param {Interface} rl Readline Interface
+ * @returns {undefined}
+ */
 export default function(rl: Interface) {
     // Use arrow function in callback to keep context as client instance
     rl.question(chalk.green("Channel Name: "), name => {
