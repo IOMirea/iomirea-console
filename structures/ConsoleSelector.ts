@@ -40,6 +40,13 @@ export default class ConsoleSelector {
         this._contents = value;
     }
 
+    /**
+     * Logs a string with inverse font if ci is the same as this.state
+     *
+     * @param {number|string} s The string to be printed to stdout
+     * @param {number} ci Current iteration index
+     * @returns {undefined}
+     */
     log(s: number|string, ci: number) {
         let v: string;
         if (typeof s === "number") v = this.contents[s];
