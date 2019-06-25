@@ -8,6 +8,12 @@ const texts: object = {
     EXIT:         "Exit"
 };
 
+/**
+ * Shows the main menu
+ *
+ * @param {number} state readline state
+ * @returns {undefined}
+ */
 export default function(state: number) {
     if (state === rlStates.MENU_SELECTION || state === rlStates.MENU_VIEW_CHANNEL)
         console.log(chalk.inverse(" ".repeat(25 - texts["VIEW_CHANNEL"].length / 2) + texts["VIEW_CHANNEL"] + " ".repeat(25 - texts["VIEW_CHANNEL"].length / 2)));
