@@ -26,7 +26,9 @@ export interface Text {
     CHANNEL_BACK: TextObject,
     CHANNEL_SEND: TextObject,
     CHANNEL_BROWSER: TextObject,
-    CHANNEL_RELOAD: TextObject
+    CHANNEL_RELOAD: TextObject,
+    CHANNEL_CREATE: TextObject,
+    CHANNEL_NAME: TextObject
 }
 
 const colorRegex: RegExp = /<(\w{1,10})>([^<]+)<\/\w{1,10}>/;
