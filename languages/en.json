@@ -1,0 +1,79 @@
+{
+  "CHANNEL_NAME_INPUT": {
+    "t": "Channel Name: ",
+    "c": "green"
+  },
+  "RECIPIENTS_ID_INPUT": {
+    "t": "Recipient IDs (optional, split by command): ",
+    "c": "green"
+  },
+  "USERID_NOT_INT": {
+    "t": "User IDs are numbers!",
+    "c": "red"
+  },
+  "CHANNEL_CREATE_S": {
+    "t": "Successfully created channel.",
+    "c": "green"
+  },
+  "CHANNEL_CREATE_E": {
+    "t": "Could not create channel: {err}",
+    "c": "red"
+  },
+
+  "MONTH_1": { "t": "January" },
+  "MONTH_2": { "t": "February" },
+  "MONTH_3": { "t": "March" },
+  "MONTH_4": { "t": "April" },
+  "MONTH_5": { "t": "May" },
+  "MONTH_6": { "t": "June" },
+  "MONTH_7": { "t": "July" },
+  "MONTH_8": { "t": "August" },
+  "MONTH_9": { "t": "September" },
+  "MONTH_10": { "t": "October" },
+  "MONTH_11": { "t": "November" },
+  "MONTH_12": { "t": "December" },
+
+  "CHANNEL_BACK": { "t": "[CTRL + C] Back" },
+  "CHANNEL_SEND": { "t": "[X] Send Message" },
+  "CHANNEL_BROWSER": { "t": "[C] Back to Channel Browser" },
+  "CHANNEL_RELOAD": { "t": "[R] Force Reload" },
+  "CHANNEL_CREATE": { "t": "[C] Create Channel" },
+  "CHANNEL_NAME": { "t": "Channel Name" },
+
+  "MENU_VIEW_CHANNEL": { "t": "View Channel" },
+  "MENU_ACCOUNT_INFO": { "t": "Account Information" },
+  "MENU_SETTINGS": { "t": "Settings" },
+  "MENU_EXIT": { "t": "Exit" },
+
+  "FS_WRITE_ERROR": { "t": "An error occurred while trying to write to a file!" },
+
+  "LOGIN_ERROR_D": {
+    "t": "Error while logging in. Please replace `token` with your access token in the .config file",
+    "c": "red"
+  },
+  "LOGIN_ERROR": {
+    "t": "Error while logging in: {err}",
+    "c": "red"
+  },
+  "WS_CONNECTING": {
+    "t": "Connecting...",
+    "c": "yellow"
+  },
+  "WS_CONNECTED_MSG": {
+    "t": "Connected! ({channels} Channels, {ping}s)",
+    "c": "green"
+  },
+
+  "NOT_SUPPORTED": {
+    "t": "{feature} is not supported in this version.",
+    "c": "yellow"
+  },
+  "NEW_ACCESS_TOKEN": {
+    "t": "New Access Token: ",
+    "c": "yellow"
+  },
+  "ACCESS_TOKEN_UPDATED": {
+    "t": "Successfully updated Access Token!",
+    "c": "green"
+  }
+}

@@ -3,6 +3,7 @@ import * as readline from 'readline';
 import * as fs from 'fs';
 import chalk from "chalk";
 import * as Constants from './structures/Constants'
+import * as Language from './structures/Language'
 import {
 	writeFile
 } from 'fs';
@@ -22,7 +23,7 @@ import showSettings from './modules/showSettings';
 import writeConfig from './modules/writeConfig';
 import createChannel from './modules/createChannel';
 import {SettingsEntries} from "./structures/Constants";
-const config: Config = {};
+const config: Config = { lang: "en" };
 const client: Client = new Client();
 // readline states
 // Floating Point Error might occur if dynamic state
@@ -60,9 +61,10 @@ fs.readFile("./.config", "utf8", (err, data) => {
 		key: v.split("=")[0],
 		value: v.substr(v.indexOf("=") + 1)
 	}));
+
 	if (conf.some(v => v.value.endsWith("\r"))) conf = conf.map(v => ({
 		key: v.key,
-		value: v.value.slice(0, -1)
+		value: v.value.replace(/\r$/, "")
 	}));
 	for (const {
 			key,
@@ -70,29 +72,52 @@ fs.readFile("./.config", "utf8", (err, data) => {
 		} of conf) {
 		config[key] = value;
 	}
+
+	// Language checking
+	if (!/^\w+$/.test(config.lang)) {
+		console.log(chalk.red("Invalid language format!"));
+		process.exit(1);
+	}
+
+	if (!fs.readdirSync("./languages").includes(config.lang + ".json")) {
+		console.log(chalk.red("Language not found!"));
+		process.exit(1);
+	}
+
+	Object.defineProperty(client, "language", {
+		value: new Language.default(require("./languages/" + config.lang + ".json"))
+	});
+
+	// Access Token checking
 	if (!config.hasOwnProperty("ACCESS_TOKEN")) { // No access token provided
 		rl.question("Access Token: ", r => {
 			config.ACCESS_TOKEN = r;
-			writeConfig(config).catch(err => {
+			writeConfig.call(client, config).catch(err => {
 				console.log(chalk.red(err));
 			});
 		});
 	}
+
 	client.login(config.ACCESS_TOKEN).catch(e => {
 		const parsed: { message: string } = JSON.parse(e);
 		if (config.ACCESS_TOKEN === "token")
-			console.log(chalk.red("Error while logging in. Please replace `token` with your access token in the .config file"));
+			console.log(client.language.texts.LOGIN_ERROR_D.f);
 		else
-			console.log(chalk.red("Error while logging in. " + (parsed.message || "Perhaps an invalid access token was provided?")));
+			console.log(client.language.escape("LOGIN_ERROR", {
+				err: parsed.message
+			}, true));
 		process.exit(1);
 	});
 });
 console.clear();
-console.log(chalk.yellow("Connecting..."));
+console.log(client.language.texts.WS_CONNECTING.f);
 client.on("ready", () => {
-	console.log(chalk.green(`Connected! (${client.channels.size} Channels, ${((client.readyAt - client.instanceAt) / 1000).toFixed(2)}s)`));
+	console.log(client.language.escape("WS_CONNECTED_MSG", {
+		channels: client.channels.size,
+		ping: ((client.readyAt - client.instanceAt) / 1000).toFixed(2)
+	}, true));
 	console.log(ConsoleHelper.iomirea);
-	showMenu(rlState = Constants.rlStates.MENU_VIEW_CHANNEL);
+	showMenu.call(client, rlState = Constants.rlStates.MENU_VIEW_CHANNEL);
 });
 process.stdin.on("keypress", async (str, {
 	name
@@ -100,16 +125,16 @@ process.stdin.on("keypress", async (str, {
 	if (rlState >= Constants.rlStates.MENU_SELECTION && rlState < Constants.rlStates.VIEW_CHANNELS) {
 		if (name === "down" || str === "s") {
 			ConsoleHelper.reset();
-			if (rlState === Constants.rlStates.MENU_SELECTION || rlState === Constants.rlStates.MENU_VIEW_CHANNEL) showMenu(rlState = Constants.rlStates.MENU_ACCOUNT_INFO);
-			else if (rlState === Constants.rlStates.MENU_ACCOUNT_INFO) showMenu(rlState = Constants.rlStates.MENU_SETTINGS);
-			else if (rlState === Constants.rlStates.MENU_SETTINGS) showMenu(rlState = Constants.rlStates.MENU_EXIT);
-			else showMenu(rlState = Constants.rlStates.MENU_EXIT);
+			if (rlState === Constants.rlStates.MENU_SELECTION || rlState === Constants.rlStates.MENU_VIEW_CHANNEL) showMenu.call(client, rlState = Constants.rlStates.MENU_ACCOUNT_INFO);
+			else if (rlState === Constants.rlStates.MENU_ACCOUNT_INFO) showMenu.call(client, rlState = Constants.rlStates.MENU_SETTINGS);
+			else if (rlState === Constants.rlStates.MENU_SETTINGS) showMenu.call(client, rlState = Constants.rlStates.MENU_EXIT);
+			else showMenu.call(client, rlState = Constants.rlStates.MENU_EXIT);
 		} else if (name === "up" || str === "w") {
 			ConsoleHelper.reset();
-			if (rlState === Constants.rlStates.MENU_ACCOUNT_INFO) showMenu(rlState = Constants.rlStates.MENU_VIEW_CHANNEL);
-			else if (rlState === Constants.rlStates.MENU_SETTINGS) showMenu(rlState = Constants.rlStates.MENU_ACCOUNT_INFO);
-			else if (rlState === Constants.rlStates.MENU_EXIT) showMenu(rlState = Constants.rlStates.MENU_SETTINGS);
-			else showMenu(rlState = Constants.rlStates.MENU_VIEW_CHANNEL);
+			if (rlState === Constants.rlStates.MENU_ACCOUNT_INFO) showMenu.call(client, rlState = Constants.rlStates.MENU_VIEW_CHANNEL);
+			else if (rlState === Constants.rlStates.MENU_SETTINGS) showMenu.call(client, rlState = Constants.rlStates.MENU_ACCOUNT_INFO);
+			else if (rlState === Constants.rlStates.MENU_EXIT) showMenu.call(client, rlState = Constants.rlStates.MENU_SETTINGS);
+			else showMenu.call(client, rlState = Constants.rlStates.MENU_VIEW_CHANNEL);
 		} else if (name === "return") {
 			if (rlState !== Constants.rlStates.MENU_EXIT && rlState !== Constants.rlStates.MENU_VIEW_CHANNEL) ConsoleHelper.reset({
 				border: true
@@ -167,7 +192,7 @@ process.stdin.on("keypress", async (str, {
 		ConsoleHelper.reset({
 			border: true
 		});
-		showMenu(rlState = Constants.rlStates.MENU_VIEW_CHANNEL);
+		showMenu.call(client, rlState = Constants.rlStates.MENU_VIEW_CHANNEL);
 	} else if (rlState === Constants.rlStates.CHANNEL_BROWSER) {
 		if (str === "x") {
 			console.clear();
@@ -217,7 +242,7 @@ process.stdin.on("keypress", async (str, {
         } else if (name === "return") {
         	switch (selector.state) {
 				case 1:
-                    process.stdout.write("\n" + chalk.yellow("New Access Token: "));
+                    process.stdout.write("\n" + client.language.texts.NEW_ACCESS_TOKEN.f);
                     rlState = Constants.rlStates.SETTINGS_ACCESS_TOKEN;
                     break;
 
@@ -230,12 +255,14 @@ process.stdin.on("keypress", async (str, {
 					break;
 
 				case 3:
-					console.log(chalk.yellow("Changing Color Scheme is not supported in this version"));
+					console.log(client.language.escape("NOT_SUPPORTED", {
+						feature: "Color scheme"
+					}, true));
 					break;
 
 				case 4:
                     ConsoleHelper.reset();
-                    showMenu(rlState = Constants.rlStates.MENU_VIEW_CHANNEL);
+                    showMenu.call(client, rlState = Constants.rlStates.MENU_VIEW_CHANNEL);
                     rlState = Constants.rlStates.MENU_SELECTION;
                     break;
 			}
@@ -244,10 +271,10 @@ process.stdin.on("keypress", async (str, {
 		if (name === "return") {
 			client.accessToken = tempInput;
 			config.ACCESS_TOKEN = tempInput;
-			writeConfig(config).then(() => {
+			writeConfig.call(client, config).then(() => {
 				ConsoleHelper.reset();
 				showSettings(config, selector);
-				console.log(chalk.green("Successfully updated Access Token!"));
+				console.log(client.language.texts.ACCESS_TOKEN_UPDATED.f);
 			}).catch(err => {
 				console.log(chalk.red(err));
 			});
@@ -268,7 +295,7 @@ rl.on("SIGINT", () => {
 	}
 	client.removeActiveChannel();
 	ConsoleHelper.reset();
-	showMenu(rlState = Constants.rlStates.MENU_VIEW_CHANNEL);
+	showMenu.call(client, rlState = Constants.rlStates.MENU_VIEW_CHANNEL);
 	rlState = Constants.rlStates.MENU_SELECTION;
 	tempInput = "";
 });

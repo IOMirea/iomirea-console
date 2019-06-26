@@ -3,6 +3,7 @@ import Channel from './Channel';
 import User from './User';
 import ClientUser from './ClientUser';
 import fetch from 'node-fetch';
+import * as Language from './Language'
 
 export default class Client extends EventEmitter {
     private _channels: Map<string, Channel> = new Map();
@@ -12,10 +13,19 @@ export default class Client extends EventEmitter {
     private _readyAt: number = null;
     private _user: ClientUser = null;
     private _activeChannel: Channel = null;
+    private _language: Language.default = null;
     static API_HOST: string = "https://iomirea.ml/api/v0/";
 
     constructor() {
         super();
+
+        // @ts-ignore
+        this.language = new Language.default({
+            WS_CONNECTING: {
+                t: "Connecting...",
+                c: "green"
+            }
+        });
     }
 
     // Getters/Setters
@@ -77,6 +87,15 @@ export default class Client extends EventEmitter {
 
     get uptime(): number {
         return Date.now() - this.readyAt;
+    }
+
+    get language(): Language.default {
+        return this._language;
+    }
+
+    set language(value: Language.default) {
+        this.emit("languageChange", value);
+        this._language = value;
     }
 
     // Methods
