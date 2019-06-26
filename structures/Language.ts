@@ -31,11 +31,13 @@ export default class Language {
         }
     }
 
-    escape(textConstant: string, replaceObj: any): string {
-        let r: string = this.texts[textConstant].t;
+    escape(textConstant: string, replaceObj: any, format: boolean = false): string {
+        let o: TextObject = this.texts[textConstant];
+        let t: string = o.t;
         for (const [k, v] of Object.entries(replaceObj)) {
-            r = r.replace(new RegExp("{" + k + "}", "g"), v.toString());
+            t = t.replace(new RegExp("{" + k + "}", "g"), (v || { toString: () => "Unknown error" }).toString());
         }
-        return r;
+        if (format === true) t = chalk[o.c](t);
+        return t;
     }
 }
