@@ -25,6 +25,7 @@ export default class Language {
         for (const [k, v] of Object.entries(this.texts)) {
             Object.defineProperty(this.texts[k], "f", {
                 get() {
+                    if (!chalk[v.c]) return v.t;
                     return chalk[v.c](v.t);
                 }
             });
@@ -37,7 +38,7 @@ export default class Language {
         for (const [k, v] of Object.entries(replaceObj)) {
             t = t.replace(new RegExp("{" + k + "}", "g"), (v || { toString: () => "Unknown error" }).toString());
         }
-        if (format === true) t = chalk[o.c](t);
+        if (format === true) t = chalk[o.c || "white"](t);
         return t;
     }
 }
