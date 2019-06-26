@@ -18,6 +18,14 @@ export default class Client extends EventEmitter {
 
     constructor() {
         super();
+
+        // @ts-ignore
+        this.language = new Language.default({
+            WS_CONNECTING: {
+                t: "Connecting...",
+                c: "green"
+            }
+        });
     }
 
     // Getters/Setters
