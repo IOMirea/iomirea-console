@@ -12,7 +12,7 @@ export default function(config: Config): Promise<Config> {
     const configElements: Array<Array<string>> = Object.entries(config);
     return new Promise((resolve, reject) => {
         fs.writeFile("./.config", configElements.map(v => v[0] + "=" + v[1]).join("\n"), (err) => {
-            if (err) reject("An error occurred while trying to write to .config file!");
+            if (err) reject(this.language.texts.FS_WRITE_ERROR.t);
             else resolve(config);
         });
     });
