@@ -11,6 +11,7 @@ This repository contains the source code for a console client that interacts wit
 
 ### Requirements
 This has been tested on Windows (10) and Linux (Raspbian) with Node.js v10.15.3 installed.
+Travis CI compiles every commit and pull request on Node.js v9, v10 and v11 to check if it's working.
 Although it should work on old versions it is recommended to use LTS.
 
 ### Installation and Setup
@@ -48,3 +49,7 @@ ACCESS_TOKEN=token
 ```sh
 npm run iomirea
 ```
+
+### Adding Languages
+You can easily add your own language by creating a JSON file in the `./languages` directory. The filename (without extension) is what you have to place in your `.config` file as `lang`. <br/>
+Feel free to use `en.json` as template.
