@@ -1,13 +1,6 @@
 import chalk from 'chalk';
 import { rlStates } from '../structures/Constants';
 
-const texts: object = {
-    VIEW_CHANNEL: "View Channel",
-    ACCOUNT_INFO: "Account Information",
-    SETTINGS:     "Settings",
-    EXIT:         "Exit"
-};
-
 /**
  * Shows the main menu
  *
