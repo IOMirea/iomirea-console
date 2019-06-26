@@ -28,7 +28,12 @@ export interface Text {
     CHANNEL_BROWSER: TextObject,
     CHANNEL_RELOAD: TextObject,
     CHANNEL_CREATE: TextObject,
-    CHANNEL_NAME: TextObject
+    CHANNEL_NAME: TextObject,
+    MENU_VIEW_CHANNEL: TextObject,
+    MENU_ACCOUNT_INFO: TextObject,
+    MENU_SETTINGS: TextObject,
+    MENU_EXIT: TextObject,
+    FS_WRITE_ERROR: TextObject
 }
 
 const colorRegex: RegExp = /<(\w{1,10})>([^<]+)<\/\w{1,10}>/;
