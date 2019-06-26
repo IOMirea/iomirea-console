@@ -22,7 +22,11 @@ export interface Text {
     MONTH_9: TextObject,
     MONTH_10: TextObject,
     MONTH_11: TextObject,
-    MONTH_12: TextObject
+    MONTH_12: TextObject,
+    CHANNEL_BACK: TextObject,
+    CHANNEL_SEND: TextObject,
+    CHANNEL_BROWSER: TextObject,
+    CHANNEL_RELOAD: TextObject
 }
 
 const colorRegex: RegExp = /<(\w{1,10})>([^<]+)<\/\w{1,10}>/;
@@ -35,6 +39,9 @@ export default class Language {
 
         // Define `f` getter for each text
         for (const [k, v] of Object.entries(this.texts)) {
+            this.texts[k].toString = this.texts[k].valueOf = function() {
+                return this.t;
+            };
             Object.defineProperty(this.texts[k], "f", {
                 get() {
                     if (!chalk[v.c]) return v.t;
