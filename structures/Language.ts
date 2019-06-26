@@ -10,7 +10,19 @@ export interface Text {
     RECIPIENTS_ID_INPUT: TextObject,
     USERID_NOT_INT: TextObject,
     CHANNEL_CREATE_S: TextObject,
-    CHANNEL_CREATE_E: TextObject
+    CHANNEL_CREATE_E: TextObject,
+    MONTH_1: TextObject,
+    MONTH_2: TextObject,
+    MONTH_3: TextObject,
+    MONTH_4: TextObject,
+    MONTH_5: TextObject,
+    MONTH_6: TextObject,
+    MONTH_7: TextObject,
+    MONTH_8: TextObject,
+    MONTH_9: TextObject,
+    MONTH_10: TextObject,
+    MONTH_11: TextObject,
+    MONTH_12: TextObject
 }
 
 const colorRegex: RegExp = /<(\w{1,10})>([^<]+)<\/\w{1,10}>/;
