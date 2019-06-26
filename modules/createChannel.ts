@@ -10,19 +10,21 @@ import chalk from "chalk";
  */
 export default function(rl: Interface): void {
     // Use arrow function in callback to keep context as client instance
-    rl.question(chalk.green("Channel Name: "), name => {
-        rl.question(chalk.green("Recipient IDs ") + chalk.yellow("(optional)") + chalk.green(" - seperate with comma: "), recipients => {
+    rl.question(this.language.texts.CHANNEL_NAME_INPUT.f, name => {
+        rl.question(this.language.texts.RECIPIENTS_ID_INPUT.f, recipients => {
             const user_ids = recipients.trim().split(/, */);
-            if (user_ids.some(v => !/^\d+$/.test(v))) return console.log(chalk.red("User IDs are only numbers!"));
+            if (user_ids.some(v => !/^\d+$/.test(v))) return console.log(this.language.texts.USERID_NOT_INT.f);
             Channel.create(this, {
                 name,
                 user_ids
             }).then((c: Channel) => {
                 const channel: Channel = new Channel(c.id, c.name, c.owner_id, c.user_ids, c.pinned_ids, this);
                 this.channels.set(channel.id, channel);
-                console.log(chalk.green("Successfully created channel."));
+                console.log(this.language.texts.CHANNEL_CREATE_S.f);
             }).catch(e => {
-                console.log(chalk.red("Could not create channel: " + e));
+                console.log(this.language.escape("CHANNEL_CREATE_E", {
+                    err: e
+                }, true));
             });
         });
     });
