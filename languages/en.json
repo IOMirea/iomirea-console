@@ -41,9 +41,9 @@
   "CHANNEL_NAME": { "t": "Channel Name" },
 
   "MENU_VIEW_CHANNEL": { "t": "View Channel" },
-  "MENU_ACCOUNT_INFO": { "t": "View Channel" },
-  "MENU_SETTINGS": { "t": "View Channel" },
-  "MENU_EXIT": { "t": "View Channel" },
+  "MENU_ACCOUNT_INFO": { "t": "Account Information" },
+  "MENU_SETTINGS": { "t": "Settings" },
+  "MENU_EXIT": { "t": "Exit" },
 
   "FS_WRITE_ERROR": { "t": "An error occurred while trying to write to a file!" },
 
