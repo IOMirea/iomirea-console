@@ -15,23 +15,27 @@ const texts: object = {
  * @returns {undefined}
  */
 export default function(state: number) {
-    if (state === rlStates.MENU_SELECTION || state === rlStates.MENU_VIEW_CHANNEL)
-        console.log(chalk.inverse(" ".repeat(25 - texts["VIEW_CHANNEL"].length / 2) + texts["VIEW_CHANNEL"] + " ".repeat(25 - texts["VIEW_CHANNEL"].length / 2)));
-    else
-        console.log(texts["VIEW_CHANNEL"]);
+    if (state === rlStates.MENU_SELECTION || state === rlStates.MENU_VIEW_CHANNEL) {
+        const text = this.language.texts.MENU_VIEW_CHANNEL.t;
+        console.log(chalk.inverse(" ".repeat(25 - text.length / 2) + text + " ".repeat(25 - text.length / 2)));
+    } else
+        console.log(this.language.texts.MENU_VIEW_CHANNEL.t);
 
-    if (state === rlStates.MENU_ACCOUNT_INFO)
-        console.log(chalk.inverse(" ".repeat(25 - texts["ACCOUNT_INFO"].length / 2) + texts["ACCOUNT_INFO"] + " ".repeat(25 - texts["ACCOUNT_INFO"].length / 2)));
-    else
-        console.log(texts["ACCOUNT_INFO"]);
+    if (state === rlStates.MENU_ACCOUNT_INFO) {
+        const text = this.language.texts.MENU_ACCOUNT_INFO.t;
+        console.log(chalk.inverse(" ".repeat(25 - text.length / 2) + text + " ".repeat(25 - text.length / 2)));
+    } else
+        console.log(this.language.texts.MENU_ACCOUNT_INFO.t);
 
-    if (state === rlStates.MENU_SETTINGS)
-        console.log(chalk.inverse(" ".repeat(25 - texts["SETTINGS"].length / 2) + texts["SETTINGS"] + " ".repeat(25 - texts["SETTINGS"].length / 2)));
-    else
-        console.log(texts["SETTINGS"]);
+    if (state === rlStates.MENU_SETTINGS) {
+        const text = this.language.texts.MENU_SETTINGS.t;
+        console.log(chalk.inverse(" ".repeat(25 - text.length / 2) + text + " ".repeat(25 - text.length / 2)));
+    } else
+        console.log(this.language.texts.MENU_SETTINGS.t);
 
-    if (state === rlStates.MENU_EXIT)
-        console.log(chalk.inverse(" ".repeat(25 - texts["EXIT"].length / 2) + texts["EXIT"] + " ".repeat(25 - texts["EXIT"].length / 2)));
-    else
-        console.log(texts["EXIT"]);
+    if (state === rlStates.MENU_EXIT) {
+        const text = this.language.texts.MENU_EXIT.t;
+        console.log(chalk.inverse(" ".repeat(25 - text.length / 2) + text + " ".repeat(25 - text.length / 2)));
+    } else
+        console.log(this.language.texts.MENU_EXIT.t);
 }
