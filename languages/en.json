@@ -1,3 +1,22 @@
 {
-
+  "CHANNEL_NAME_INPUT": {
+    "t": "Channel Name: ",
+    "c": "green"
+  },
+  "RECIPIENTS_ID_INPUT": {
+    "t": "Recipient IDs (optional, split by command): ",
+    "c": "green"
+  },
+  "USERID_NOT_INT": {
+    "t": "User IDs are numbers!",
+    "c": "red"
+  },
+  "CHANNEL_CREATE_S": {
+    "t": "Successfully created channel.",
+    "c": "green"
+  },
+  "CHANNEL_CREATE_E": {
+    "t": "Could not create channel: {err}",
+    "c": "red"
+  }
 }
