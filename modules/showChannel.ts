@@ -10,12 +10,6 @@ const texts: any = {
         bot: "[Bot]",
         user: "[User]"
     },
-    controls: {
-        back: "[CTRL+C] Back",
-        send: "[X] Send Message",
-        channel_browser: "[C] Back to Channel Browser",
-        reload: "[R] Force Reload",
-    }
 };
 
 /**
@@ -37,7 +31,7 @@ export default async function (channel: Channel | string, client: Client, state:
         console.log(chalk.magenta(formatTime(Client.getTime(messages[i].id))) + " ".repeat(3) + messages[i].author.name + " " + (chalk.cyan(messages[i].author.bot ? texts.label.bot : texts.label.user)) + (" ".repeat(10 - messages[i].author.name.length)) + " " + messages[i].content.substr(0, process.stdout.columns || 2048));
     }
     let spacePad: number = state === 2 ? 3 : 2;
-    console.log(("\n").repeat(messages.length > process.stdout.rows - spacePad ? 0 : process.stdout.rows - messages.length - spacePad) + (state === 2 ? texts.controls.back : `${texts.controls.send}\t${texts.controls.channel_browser}\t${texts.controls.reload}`));
+    console.log(("\n").repeat(messages.length > process.stdout.rows - spacePad ? 0 : process.stdout.rows - messages.length - spacePad) + (state === 2 ? client.language.texts.CHANNEL_BACK : `${client.language.texts.CHANNEL_SEND}\t${client.language.texts.CHANNEL_BROWSER}\t${client.language.texts.CHANNEL_RELOAD}`));
     if (state === 2) {
         console.log("―".repeat(process.stdout.columns));
         process.stdout.write("> ");
