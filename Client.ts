@@ -3,6 +3,7 @@ import * as readline from 'readline';
 import * as fs from 'fs';
 import chalk from "chalk";
 import * as Constants from './structures/Constants'
+import * as Language from './structures/Language'
 import {
 	writeFile
 } from 'fs';
@@ -22,7 +23,7 @@ import showSettings from './modules/showSettings';
 import writeConfig from './modules/writeConfig';
 import createChannel from './modules/createChannel';
 import {SettingsEntries} from "./structures/Constants";
-const config: Config = {};
+const config: Config = { lang: "en" };
 const client: Client = new Client();
 // readline states
 // Floating Point Error might occur if dynamic state
@@ -60,9 +61,10 @@ fs.readFile("./.config", "utf8", (err, data) => {
 		key: v.split("=")[0],
 		value: v.substr(v.indexOf("=") + 1)
 	}));
+
 	if (conf.some(v => v.value.endsWith("\r"))) conf = conf.map(v => ({
 		key: v.key,
-		value: v.value.slice(0, -1)
+		value: v.value.replace(/\r$/, "")
 	}));
 	for (const {
 			key,
@@ -70,6 +72,25 @@ fs.readFile("./.config", "utf8", (err, data) => {
 		} of conf) {
 		config[key] = value;
 	}
+
+	console.log(config.lang)
+
+	// Language checking
+	if (!/^\w+$/.test(config.lang)) {
+		console.log(chalk.red("Invalid language format!"));
+		process.exit(1);
+	}
+
+	if (!fs.readdirSync("./languages").includes(config.lang + ".json")) {
+		console.log(chalk.red("Language not found!"));
+		process.exit(1);
+	}
+
+	Object.defineProperty(client, "language", {
+		value: new Language.default(require("./languages/" + config.lang + ".json"))
+	});
+
+	// Access Token checking
 	if (!config.hasOwnProperty("ACCESS_TOKEN")) { // No access token provided
 		rl.question("Access Token: ", r => {
 			config.ACCESS_TOKEN = r;
@@ -78,6 +99,7 @@ fs.readFile("./.config", "utf8", (err, data) => {
 			});
 		});
 	}
+
 	client.login(config.ACCESS_TOKEN).catch(e => {
 		const parsed: { message: string } = JSON.parse(e);
 		if (config.ACCESS_TOKEN === "token")
