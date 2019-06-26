@@ -2,7 +2,8 @@ import * as chalk from 'chalk';
 
 export interface TextObject {
     t: string,
-    c?: string
+    c?: string,
+    f?: Function
 }
 
 export interface Text {
@@ -33,7 +34,14 @@ export interface Text {
     MENU_ACCOUNT_INFO: TextObject,
     MENU_SETTINGS: TextObject,
     MENU_EXIT: TextObject,
-    FS_WRITE_ERROR: TextObject
+    FS_WRITE_ERROR: TextObject,
+    LOGIN_ERROR_D: TextObject,
+    LOGIN_ERROR: TextObject,
+    WS_CONNECTING: TextObject,
+    WS_CONNECTED_MSG: TextObject,
+    NOT_SUPPORTED: TextObject,
+    ACCESS_TOKEN_UPDATED: TextObject,
+    NEW_ACCESS_TOKEN: TextObject
 }
 
 const colorRegex: RegExp = /<(\w{1,10})>([^<]+)<\/\w{1,10}>/;
