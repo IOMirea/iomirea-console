@@ -1,0 +1,79 @@
+{
+  "CHANNEL_NAME_INPUT": {
+    "t": "Kanal-Name: ",
+    "c": "green"
+  },
+  "RECIPIENTS_ID_INPUT": {
+    "t": "Empfänger IDs (optional, mit Komma trennen): ",
+    "c": "green"
+  },
+  "USERID_NOT_INT": {
+    "t": "User IDs sind nur Zahlen!",
+    "c": "red"
+  },
+  "CHANNEL_CREATE_S": {
+    "t": "Kanal wurde erfolgreich erstellt.",
+    "c": "green"
+  },
+  "CHANNEL_CREATE_E": {
+    "t": "Kanal konnte nicht erstellt werden: {err}",
+    "c": "red"
+  },
+
+  "MONTH_1": { "t": "Januar" },
+  "MONTH_2": { "t": "Februar" },
+  "MONTH_3": { "t": "März" },
+  "MONTH_4": { "t": "April" },
+  "MONTH_5": { "t": "Mai" },
+  "MONTH_6": { "t": "Juni" },
+  "MONTH_7": { "t": "Juli" },
+  "MONTH_8": { "t": "August" },
+  "MONTH_9": { "t": "September" },
+  "MONTH_10": { "t": "Oktober" },
+  "MONTH_11": { "t": "November" },
+  "MONTH_12": { "t": "Dezember" },
+
+  "CHANNEL_BACK": { "t": "[CTRL + C] Zurück" },
+  "CHANNEL_SEND": { "t": "[X] Nachricht senden" },
+  "CHANNEL_BROWSER": { "t": "[C] Zurück zum Channel-Browser" },
+  "CHANNEL_RELOAD": { "t": "[R] Aktualisieren" },
+  "CHANNEL_CREATE": { "t": "[C] Kanal erstellen" },
+  "CHANNEL_NAME": { "t": "Kanal-Name" },
+
+  "MENU_VIEW_CHANNEL": { "t": "Kanal ansehen" },
+  "MENU_ACCOUNT_INFO": { "t": "Account-Informationen" },
+  "MENU_SETTINGS": { "t": "Einstellungen" },
+  "MENU_EXIT": { "t": "Beenden" },
+
+  "FS_WRITE_ERROR": { "t": "Ein Fehler beim Schreiben einer Datei ist aufgetreten!" },
+
+  "LOGIN_ERROR_D": {
+    "t": "Ein Fehler beim Verbinden ist aufgetreten. Bitte stelle sicher, dass sich der Zugangstoken in der .config Datei befindet",
+    "c": "red"
+  },
+  "LOGIN_ERROR": {
+    "t": "Ein Fehler beim Verbinden ist aufgetreten: {err}",
+    "c": "red"
+  },
+  "WS_CONNECTING": {
+    "t": "Verbinde...",
+    "c": "yellow"
+  },
+  "WS_CONNECTED_MSG": {
+    "t": "Verbunden! ({channels} Kanäle, {ping}s)",
+    "c": "green"
+  },
+
+  "NOT_SUPPORTED": {
+    "t": "{feature} ist nicht verfügbar in dieser Version.",
+    "c": "yellow"
+  },
+  "NEW_ACCESS_TOKEN": {
+    "t": "Neuer Zugangstoken: ",
+    "c": "yellow"
+  },
+  "ACCESS_TOKEN_UPDATED": {
+    "t": "Zugangstoken wurde erfolgreich geändert!",
+    "c": "green"
+  }
+}
